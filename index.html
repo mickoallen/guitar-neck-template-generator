@@ -234,7 +234,7 @@
             
             <div class="parameter">
                 <label for="line-thickness">Line Thickness (mm):</label>
-                <input type="number" id="line-thickness" class="update-trigger" min="0.01" max="1" step="0.01" value="0.1">
+                <input type="number" id="line-thickness" class="update-trigger" min="0.01" max="1" step="0.01" value="0.01">
             </div>
             
             <div class="checkbox-group">
@@ -363,6 +363,17 @@
             const heelTopY = centerY - (stringSpacing / 2) - bassEMargin - kerfCompensation;
             const heelBottomY = centerY + (stringSpacing / 2) + trebleEMargin + kerfCompensation;
             
+            // Find 12th fret position
+            const twelfthFretIdx = 11; // 0-based index for the 12th fret
+            const twelfthFretPosition = (twelfthFretIdx < fretPositions.length) ? fretPositions[twelfthFretIdx] : lastFretPosition / 2;
+            const twelfthFretX = nutX + twelfthFretPosition;
+            
+            // Calculate width at 12th fret based on taper
+            const taperRatio = twelfthFretPosition / lastFretPosition;
+            const topY12Fret = nutTopY + (taperRatio * (heelTopY - nutTopY));
+            const bottomY12Fret = nutBottomY + (taperRatio * (heelBottomY - nutBottomY));
+            const width12Fret = bottomY12Fret - topY12Fret;
+            
             // Start building SVG
             let svgContent = `<svg viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg">`;
             
@@ -419,12 +430,18 @@
             // Add labels if requested
             if (showLabels) {
                 svgContent += `
-                <text x="${nutX}" y="${nutBottomY + 15}" font-family="Arial" font-size="12">Nut Width: ${nutWidth}mm</text>
-                <text x="${heelX}" y="${heelBottomY + 15}" font-family="Arial" font-size="12" text-anchor="end">
-                    Heel Width: ${heelWidth.toFixed(1)}mm
-                </text>
+                <text x="${nutX}" y="${nutBottomY + 15}" font-family="Arial" font-size="12">Nut Width: ${nutWidth}mm</text>`;
+                
+                // Add 12th fret width label (replacing heel width label)
+                svgContent += `
+                <text x="${twelfthFretX}" y="${bottomY12Fret + 15}" font-family="Arial" font-size="12" text-anchor="middle">
+                    Neck Thickness at 12th Fret: ${width12Fret.toFixed(1)}mm
+                </text>`;
+                
+                // Add string spacing info
+                svgContent += `
                 <text x="${heelX}" y="${heelBottomY + 30}" font-family="Arial" font-size="10" text-anchor="end">
-                    (${stringSpacing}mm E-E, ${bassEMargin}mm Bass, ${trebleEMargin}mm Treble)
+                    String Spacing: ${stringSpacing}mm (E-E), ${bassEMargin}mm Bass, ${trebleEMargin}mm Treble
                 </text>`;
                 
                 // Add heel position info
@@ -442,6 +459,17 @@
                         Kerf compensation: ${prefix}${kerfCompensation}mm
                     </text>`;
                 }
+            }
+            
+            // Visual indicator for 12th fret measurement
+            if (showLabels) {
+                svgContent += `
+                <line x1="${twelfthFretX}" y1="${topY12Fret}" x2="${twelfthFretX + 25}" y2="${topY12Fret}" 
+                      stroke="#999" stroke-width="${lineThickness}" stroke-dasharray="1,1"/>
+                <line x1="${twelfthFretX}" y1="${bottomY12Fret}" x2="${twelfthFretX + 25}" y2="${bottomY12Fret}" 
+                      stroke="#999" stroke-width="${lineThickness}" stroke-dasharray="1,1"/>
+                <line x1="${twelfthFretX + 20}" y1="${topY12Fret}" x2="${twelfthFretX + 20}" y2="${bottomY12Fret}" 
+                      stroke="#999" stroke-width="${lineThickness}" stroke-dasharray="1,1"/>`;
             }
             
             // Add centerline if requested
