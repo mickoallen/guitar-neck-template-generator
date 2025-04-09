@@ -83,6 +83,16 @@
             border: 1px solid #ddd;
             margin-bottom: 10px;
             background-color: white;
+            overflow: hidden;
+            position: relative;
+        }
+        #svg-output svg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 100%;
+            max-height: 100%;
         }
         #svg-code {
             width: 100%;
@@ -123,6 +133,27 @@
         }
         .col {
             flex: 1;
+        }
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .zoom-btn {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .zoom-btn:hover {
+            background-color: #45a049;
+        }
+        .zoom-level {
+            font-size: 14px;
+            color: #666;
         }
     </style>
 </head>
@@ -340,14 +371,14 @@
             const lastFretPosition = fretPositions[fretPositions.length - 1];
             
             // Setup SVG dimensions
-            const svgWidth = 800;
-            const svgHeight = 200;
+            const padding = 50; // 50mm padding
+            const svgWidth = lastFretPosition + heelPosition + (padding * 2);
+            const svgHeight = heelWidth + (padding * 2);
             const centerY = svgHeight / 2;
             
             // Setup coordinate system
-            const nutX = 50;
-            // Use the configurable heel position instead of fixed 2mm
-            const heelX = nutX + lastFretPosition + heelPosition; 
+            const nutX = padding;
+            const heelX = nutX + lastFretPosition + heelPosition;
             
             // Calculate neck height values with kerf compensation
             const nutHalfHeight = (nutWidth / 2) + kerfCompensation;
@@ -355,16 +386,12 @@
             const nutTopY = centerY - nutHalfHeight;
             const nutBottomY = centerY + nutHalfHeight;
             
-            // Account for asymmetrical margins
-            const bassMarginRatio = bassEMargin / (bassEMargin + trebleEMargin);
-            const trebleMarginRatio = trebleEMargin / (bassEMargin + trebleEMargin);
-            
             // Calculate asymmetrical heel position
             const heelTopY = centerY - (stringSpacing / 2) - bassEMargin - kerfCompensation;
             const heelBottomY = centerY + (stringSpacing / 2) + trebleEMargin + kerfCompensation;
             
             // Find 12th fret position
-            const twelfthFretIdx = 11; // 0-based index for the 12th fret
+            const twelfthFretIdx = 11;
             const twelfthFretPosition = (twelfthFretIdx < fretPositions.length) ? fretPositions[twelfthFretIdx] : lastFretPosition / 2;
             const twelfthFretX = nutX + twelfthFretPosition;
             
@@ -374,14 +401,18 @@
             const bottomY12Fret = nutBottomY + (taperRatio * (heelBottomY - nutBottomY));
             const width12Fret = bottomY12Fret - topY12Fret;
             
-            // Start building SVG
-            let svgContent = `<svg viewBox="0 0 ${svgWidth} ${svgHeight}" xmlns="http://www.w3.org/2000/svg">`;
+            // Start building SVG with explicit units
+            let svgContent = `<svg width="${svgWidth}mm" height="${svgHeight}mm" viewBox="0 0 ${svgWidth} ${svgHeight}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+                <style>
+                    .measurement { font-size: 12px; }
+                    .title { font-size: 14px; }
+                </style>`;
             
             // Add title based on template parameters
             const titleText = `${fretCount} Fret - ${scaleLength}" Scale - ${bridgeType === 'hardtail' ? 'Hardtail' : 'TOM'} Bridge`;
             if (showLabels) {
                 svgContent += `
-                <text x="${(svgWidth/2)}" y="25" font-family="Arial" font-size="14" text-anchor="middle">
+                <text x="${(svgWidth/2)}" y="25" class="title" text-anchor="middle">
                     ${titleText}
                 </text>`;
             }
