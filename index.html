@@ -279,7 +279,7 @@
                     <label for="show-labels">Show Labels</label>
                 </div>
                 <div class="checkbox-item">
-                    <input type="checkbox" id="show-frets" class="update-trigger">
+                    <input type="checkbox" id="show-frets" class="update-trigger" checked>
                     <label for="show-frets">Show Fret Positions</label>
                 </div>
             </div>
@@ -411,10 +411,18 @@
             // Add title based on template parameters
             const titleText = `${fretCount} Fret - ${scaleLength}" Scale - ${bridgeType === 'hardtail' ? 'Hardtail' : 'TOM'} Bridge`;
             if (showLabels) {
+                // Position text above centerline
+                const textY = centerY - (nutHalfHeight * 0.6); // Position it at 60% towards the top edge
+                
+                // Add scale length
                 svgContent += `
-                <text x="${(svgWidth/2)}" y="25" class="title" text-anchor="middle">
-                    ${titleText}
-                </text>`;
+                <text x="${nutX + 40}" y="${textY}" font-family="Arial" font-size="8" text-anchor="start">
+                    ${scaleLength}"</text>`;
+                
+                // Add nut width
+                svgContent += `
+                <text x="${nutX + 10}" y="${textY}" font-family="Arial" font-size="8" text-anchor="start">
+                    ${nutWidth}mm</text>`;
             }
             
             // Create neck template path
@@ -446,13 +454,17 @@
                     // Add fret markers at traditional positions
                     const markerPositions = [2, 4, 6, 8, 11, 14, 16, 18, 20, 23];
                     if (markerPositions.includes(idx)) {
+                        // Calculate position halfway between current fret and previous fret
+                        const prevFretX = idx === 0 ? nutX : nutX + fretPositions[idx - 1];
+                        const markerX = (fretX + prevFretX) / 2;
+                        
                         if (idx === 11) { // Special case for 12th fret (double dot)
                             svgContent += `
-                            <circle cx="${fretX}" cy="${centerY - 10}" r="4" fill="#ccc"/>
-                            <circle cx="${fretX}" cy="${centerY + 10}" r="4" fill="#ccc"/>`;
+                            <circle cx="${markerX}" cy="${centerY - 10}" r="4" fill="#ccc"/>
+                            <circle cx="${markerX}" cy="${centerY + 10}" r="4" fill="#ccc"/>`;
                         } else {
                             svgContent += `
-                            <circle cx="${fretX}" cy="${centerY}" r="4" fill="#ccc"/>`;
+                            <circle cx="${markerX}" cy="${centerY}" r="4" fill="#ccc"/>`;
                         }
                     }
                 });
@@ -460,47 +472,35 @@
             
             // Add labels if requested
             if (showLabels) {
-                svgContent += `
-                <text x="${nutX}" y="${nutBottomY + 15}" font-family="Arial" font-size="12">Nut Width: ${nutWidth}mm</text>`;
+                // Calculate text positions relative to neck edges
+                const topTextY = centerY - (nutHalfHeight * 0.6); // Upper text line
+                const bottomTextY = centerY + (nutHalfHeight * 0.6); // Lower text line
                 
-                // Add 12th fret width label (replacing heel width label)
+                // Add scale length and nut width near the nut
                 svgContent += `
-                <text x="${twelfthFretX}" y="${bottomY12Fret + 15}" font-family="Arial" font-size="12" text-anchor="middle">
-                    Neck Thickness at 12th Fret: ${width12Fret.toFixed(1)}mm
-                </text>`;
+                <text x="${nutX + 40}" y="${topTextY}" font-family="Arial" font-size="8" text-anchor="start">
+                    ${scaleLength}"</text>`;
+                svgContent += `
+                <text x="${nutX + 10}" y="${topTextY}" font-family="Arial" font-size="8" text-anchor="start">
+                    ${nutWidth}mm</text>`;
                 
-                // Add string spacing info
+                // Add 12th fret width
                 svgContent += `
-                <text x="${heelX}" y="${heelBottomY + 30}" font-family="Arial" font-size="10" text-anchor="end">
-                    String Spacing: ${stringSpacing}mm (E-E), ${bassEMargin}mm Bass, ${trebleEMargin}mm Treble
-                </text>`;
+                <text x="${twelfthFretX}" y="${topTextY}" font-family="Arial" font-size="8" text-anchor="middle">
+                    ${width12Fret.toFixed(1)}mm</text>`;
                 
-                // Add heel position info
-                const lastFretX = nutX + lastFretPosition;
+                // Add string spacing near heel
                 svgContent += `
-                <text x="${(lastFretX + heelX)/2}" y="${heelBottomY + 45}" font-family="Arial" font-size="10" text-anchor="middle">
-                    Heel: ${heelPosition}mm from last fret
-                </text>`;
+                <text x="${heelX - heelRadius - 15}" y="${bottomTextY}" font-family="Arial" font-size="8" text-anchor="end">
+                    ${stringSpacing}mm E-E</text>`;
                 
                 // Add kerf compensation info if not zero
                 if (kerfCompensation !== 0) {
                     const prefix = kerfCompensation > 0 ? '+' : '';
                     svgContent += `
-                    <text x="${(nutX + heelX)/2}" y="${nutTopY - 10}" font-family="Arial" font-size="10" text-anchor="middle">
-                        Kerf compensation: ${prefix}${kerfCompensation}mm
-                    </text>`;
+                    <text x="${nutX + 80}" y="${bottomTextY}" font-family="Arial" font-size="8" text-anchor="start">
+                        kerf:${prefix}${kerfCompensation}mm</text>`;
                 }
-            }
-            
-            // Visual indicator for 12th fret measurement
-            if (showLabels) {
-                svgContent += `
-                <line x1="${twelfthFretX}" y1="${topY12Fret}" x2="${twelfthFretX + 25}" y2="${topY12Fret}" 
-                      stroke="#999" stroke-width="${lineThickness}" stroke-dasharray="1,1"/>
-                <line x1="${twelfthFretX}" y1="${bottomY12Fret}" x2="${twelfthFretX + 25}" y2="${bottomY12Fret}" 
-                      stroke="#999" stroke-width="${lineThickness}" stroke-dasharray="1,1"/>
-                <line x1="${twelfthFretX + 20}" y1="${topY12Fret}" x2="${twelfthFretX + 20}" y2="${bottomY12Fret}" 
-                      stroke="#999" stroke-width="${lineThickness}" stroke-dasharray="1,1"/>`;
             }
             
             // Add centerline if requested
