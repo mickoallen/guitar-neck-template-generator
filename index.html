@@ -444,7 +444,7 @@
                           stroke="#666" stroke-width="${lineThickness}"/>`;
                     
                     // Add fret markers at traditional positions
-                    const markerPositions = [2, 4, 6, 8, 11, 14, 16, 19, 21, 23];
+                    const markerPositions = [2, 4, 6, 8, 11, 14, 16, 18, 21, 23];
                     if (markerPositions.includes(idx)) {
                         if (idx === 11) { // Special case for 12th fret (double dot)
                             svgContent += `
@@ -507,7 +507,7 @@
             if (showCenterline) {
                 svgContent += `
                 <line x1="${nutX}" y1="${centerY}" x2="${heelX}" y2="${centerY}" 
-                      stroke="black" stroke-width="${lineThickness}" stroke-dasharray="2,2"/>`;
+                      stroke="black" stroke-width="${lineThickness}" />`;
             }
             
             // Close SVG
