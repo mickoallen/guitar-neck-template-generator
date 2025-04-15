@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,89 +16,110 @@
         h1 {
             text-align: center;
             color: #333;
+            margin-bottom: 30px;
         }
         .container {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 32px;
+            align-items: flex-start;
         }
         .controls {
             flex: 1;
-            min-width: 300px;
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            min-width: 340px;
+            background: #fff;
+            padding: 28px 24px 24px 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            margin-bottom: 24px;
         }
         .section {
-            border: 1px solid #eee;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+            padding: 10px 10px 8px 10px;
+            margin-bottom: 10px;
+            border-radius: 7px;
+            background: #fafbfc;
         }
         .section-title {
-            font-size: 1.1em;
+            font-size: 1em;
             font-weight: bold;
-            margin-bottom: 15px;
-            color: #333;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 5px;
+            margin-bottom: 8px;
+            color: #222;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 3px;
+            letter-spacing: 0.2px;
         }
         .output {
             flex: 2;
-            min-width: 500px;
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            min-width: 600px;
+            background: #fff;
+            padding: 18px 14px 14px 14px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            margin-bottom: 24px;
+        }
+        .output h2 {
+            font-size: 1.1em;
+            color: #222;
+            margin-bottom: 8px;
         }
         .parameter {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 2px;
+            font-weight: 500;
+            font-size: 0.97em;
+            margin-right: 6px;
         }
         input[type="range"] {
-            width: 100%;
-            margin-bottom: 5px;
+            width: 100px;
+            margin-bottom: 0;
+            vertical-align: middle;
         }
         .value-display {
-            display: flex;
+            display: inline-flex;
             justify-content: space-between;
-            font-size: 0.8em;
+            font-size: 0.92em;
             color: #666;
+            margin-left: 8px;
         }
-        select, input[type="number"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
+        select {
+            width: 140px;
+        }
+        input[type="number"] {
+            width: 70px;
+        }
+        select:focus, input[type="number"]:focus {
+            border: 1.5px solid #2196F3;
+            outline: none;
         }
         button {
             width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
+            padding: 12px;
+            background-color: #2196F3;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
+            font-size: 17px;
+            margin-top: 14px;
+            transition: background 0.2s;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: #1769aa;
         }
         #svg-output {
             width: 100%;
-            height: 400px;
-            border: 1px solid #ddd;
-            margin-bottom: 10px;
-            background-color: white;
+            height: 900px;
+            border: 2px solid #e0e0e0;
+            margin-bottom: 18px;
+            background-color: #f8fafc;
             overflow: hidden;
             position: relative;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
         }
         #svg-output svg {
             position: absolute;
@@ -111,43 +131,53 @@
         }
         #svg-code {
             width: 100%;
-            height: 200px;
+            height: 220px;
             font-family: monospace;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 12px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 6px;
             overflow: auto;
             white-space: pre;
             box-sizing: border-box;
+            background: #f8f8f8;
+            font-size: 1em;
         }
         .checkbox-group {
-            margin-top: 15px;
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 18px;
         }
         .checkbox-item {
-            margin-bottom: 10px;
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            font-size: 0.97em;
         }
         .checkbox-item input {
             margin-right: 5px;
         }
         .download-btn {
-            margin-top: 10px;
+            margin-top: 14px;
             background-color: #2196F3;
         }
         .download-btn:hover {
-            background-color: #0b7dda;
+            background-color: #1769aa;
         }
         .info-text {
-            font-size: 0.85em;
+            font-size: 0.93em;
             color: #666;
-            margin-top: 5px;
+            margin-top: 6px;
             font-style: italic;
         }
         .row {
             display: flex;
-            gap: 10px;
+            gap: 6px;
+            align-items: center;
         }
         .col {
             flex: 1;
+            min-width: 0;
         }
         .zoom-controls {
             display: flex;
@@ -156,19 +186,29 @@
             margin-bottom: 10px;
         }
         .zoom-btn {
-            padding: 5px 10px;
+            padding: 6px 12px;
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 1em;
         }
         .zoom-btn:hover {
-            background-color: #45a049;
+            background-color: #388e3c;
         }
         .zoom-level {
-            font-size: 14px;
+            font-size: 15px;
             color: #666;
+        }
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            .output, .controls {
+                min-width: 0;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -221,42 +261,26 @@
                 <div class="parameter">
                     <label for="nut-width">Nut Width (mm):</label>
                     <input type="range" id="nut-width" class="update-trigger" min="40" max="50" step="0.5" value="43">
-                    <div class="value-display">
-                        <span>40mm</span>
-                        <span id="nut-width-value">43mm</span>
-                        <span>50mm</span>
-                    </div>
+                    <span id="nut-width-value" style="margin-left:8px; font-size:0.97em; color:#444;">43mm</span>
                 </div>
 
                 <div class="parameter">
                     <label for="nut-extension">Nut Extension (mm):</label>
                     <input type="range" id="nut-extension" class="update-trigger" min="0" max="20" step="0.5" value="0">
-                    <div class="value-display">
-                        <span>0mm</span>
-                        <span id="nut-extension-value">0mm</span>
-                        <span>20mm</span>
-                    </div>
+                    <span id="nut-extension-value" style="margin-left:8px; font-size:0.97em; color:#444;">0mm</span>
                 </div>
 
                 <div class="parameter">
                     <label for="heel-position">Heel Position Relative to Last Fret (mm):</label>
                     <input type="range" id="heel-position" class="update-trigger" min="-10" max="100" step="1" value="2">
-                    <div class="value-display">
-                        <span>-10mm</span>
-                        <span id="heel-position-value">2mm</span>
-                        <span>100mm</span>
-                    </div>
+                    <span id="heel-position-value" style="margin-left:8px; font-size:0.97em; color:#444;">2mm</span>
                     <div class="info-text">Distance from last fret to heel start (negative = overlap)</div>
                 </div>
                 
                 <div class="parameter">
                     <label for="heel-radius">Heel Corner Radius (mm):</label>
                     <input type="range" id="heel-radius" class="update-trigger" min="1" max="10" step="0.5" value="6.35">
-                    <div class="value-display">
-                        <span>1mm</span>
-                        <span id="heel-radius-value">6.35mm</span>
-                        <span>10mm</span>
-                    </div>
+                    <span id="heel-radius-value" style="margin-left:8px; font-size:0.97em; color:#444;">6.35mm</span>
                 </div>
             </div>
 
@@ -296,26 +320,22 @@
                         <div class="col">
                             <label for="treble-e-margin">Treble E Margin (mm):</label>
                             <input type="range" id="treble-e-margin" class="update-trigger" min="1" max="6" step="0.5" value="3">
-                            <div class="value-display">
-                                <span>1mm</span>
-                                <span id="treble-e-margin-value">3mm</span>
-                                <span>6mm</span>
-                            </div>
+                            <span id="treble-e-margin-value" style="margin-left:8px; font-size:0.97em; color:#444;">3mm</span>
                         </div>
                         <div class="col">
                             <label for="bass-e-margin">Bass E Margin (mm):</label>
                             <input type="range" id="bass-e-margin" class="update-trigger" min="1" max="6" step="0.5" value="3.5">
-                            <div class="value-display">
-                                <span>1mm</span>
-                                <span id="bass-e-margin-value">3.5mm</span>
-                                <span>6mm</span>
-                            </div>
+                            <span id="bass-e-margin-value" style="margin-left:8px; font-size:0.97em; color:#444;">3.5mm</span>
                         </div>
                     </div>
                     <div class="info-text">Extra width added beyond the E strings</div>
                 </div>
             </div>
 
+            <button id="download-btn" class="download-btn">Download SVG</button>
+        </div>
+        
+        <div class="output">
             <div class="section">
                 <div class="section-title">Visual Settings</div>
                 <div class="parameter">
@@ -352,15 +372,10 @@
                 <div class="parameter">
                     <label for="kerf-compensation">Kerf Compensation (mm):</label>
                     <input type="range" id="kerf-compensation" class="update-trigger" min="-0.5" max="0.5" step="0.01" value="0">
-                    <div class="value-display">
-                        <span>-0.5mm</span>
-                        <span id="kerf-compensation-value">0mm</span>
-                        <span>+0.5mm</span>
-                    </div>
+                    <span id="kerf-compensation-value" style="margin-left:8px; font-size:0.97em; color:#444;">0mm</span>
                     <div class="info-text">Adjust template size to compensate for laser cutter kerf</div>
                 </div>
             </div>
-
             <div class="section">
                 <div class="section-title">Display Options</div>
                 <div class="checkbox-group">
@@ -380,13 +395,12 @@
                         <input type="checkbox" id="show-frets" class="update-trigger" checked>
                         <label for="show-frets">Show Fret Positions</label>
                     </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="show-bridge" class="update-trigger" checked>
+                        <label for="show-bridge">Show Bridge</label>
+                    </div>
                 </div>
             </div>
-            
-            <button id="download-btn" class="download-btn">Download SVG</button>
-        </div>
-        
-        <div class="output">
             <h2>Preview</h2>
             <div id="svg-output"></div>
             <h2>SVG Code</h2>
@@ -488,210 +502,196 @@
             const showFrets = document.getElementById('show-frets').checked;
             const centerlineColor = document.getElementById('centerline-color').value;
             const stringColor = document.getElementById('string-color').value;
+            const showBridge = document.getElementById('show-bridge').checked;
             
-            // Calculate heel width based on string spacing + margins
-            const heelWidth = stringSpacing + bassEMargin + trebleEMargin;
+            // Move nutExtension up before it is used
+            const nutExtension = parseFloat(document.getElementById('nut-extension').value);
+            // Calculate bridge width (E-to-E + margins)
+            const bridgeWidth = stringSpacing + bassEMargin + trebleEMargin;
+            const padding = 50;
+            const svgWidth = Math.max(nutWidth, bridgeWidth) + (padding * 2);
+            const svgHeight = scaleLength + (padding * 2) + nutExtension;
+            const centerX = svgWidth / 2;
+            
+            // Outline positions (with kerf compensation)
+            const nutWidthComp = nutWidth + kerfCompensation * 2;
+            const bridgeWidthComp = bridgeWidth + kerfCompensation * 2;
+            const nutLeft = centerX - nutWidthComp / 2;
+            const nutRight = centerX + nutWidthComp / 2;
+            const bridgeLeft = centerX - bridgeWidthComp / 2;
+            const bridgeRight = centerX + bridgeWidthComp / 2;
+            // String positions (NO kerf compensation)
+            const nutLeftStr = centerX - nutWidth / 2;
+            const nutRightStr = centerX + nutWidth / 2;
+            const bridgeLeftStr = centerX - bridgeWidth / 2;
+            const bridgeRightStr = centerX + bridgeWidth / 2;
+            const nutStringStart = nutLeftStr + bassEMargin;
+            const nutStringEnd = nutRightStr - trebleEMargin;
+            const nutStringSpacing = (nutStringEnd - nutStringStart) / 5;
+            const nutStringX = Array.from({length: 6}, (_, i) => nutStringStart + i * nutStringSpacing);
+            const bridgeStringStart = bridgeLeftStr + bassEMargin;
+            const bridgeStringEnd = bridgeRightStr - trebleEMargin;
+            const bridgeStringSpacing = (bridgeStringEnd - bridgeStringStart) / 5;
+            const bridgeStringX = Array.from({length: 6}, (_, i) => bridgeStringStart + i * bridgeStringSpacing);
+            // Helper to interpolate between nut and bridge (for outline and for strings)
+            function interp(a, b, t) { return a + (b - a) * t; }
             
             // Calculate neck length based on scale length and fret count
             const fretPositions = calculateFretPositions(scaleLength, fretCount);
             const lastFretPosition = fretPositions[fretPositions.length - 1];
             
-            const nutExtension = parseFloat(document.getElementById('nut-extension').value);
-            
-            // Setup SVG dimensions
-            const padding = 50; // 50mm padding
-            const svgWidth = lastFretPosition + heelPosition + (padding * 2) + nutExtension;
-            const svgHeight = heelWidth + (padding * 2);
-            const centerY = svgHeight / 2;
-            
             // Setup coordinate system
-            const nutX = padding + nutExtension;
-            const heelX = nutX + lastFretPosition + heelPosition;
+            const nutY = padding + nutExtension;
+            const bridgeY = nutY + scaleLength;
             
-            // Calculate neck height values with kerf compensation
-            const nutHalfHeight = (nutWidth / 2) + kerfCompensation;
-            const heelHalfHeight = (heelWidth / 2) + kerfCompensation;
-            const nutTopY = centerY - nutHalfHeight;
-            const nutBottomY = centerY + nutHalfHeight;
+            // Calculate heel position
+            // heelEndY is where the heel ends (last fret + heel position)
+            const heelEndY = nutY + lastFretPosition + heelPosition;
+            // Heel depth (fixed, e.g., 20mm)
+            const heelDepth = 20;
+            const heelStartY = heelEndY - heelDepth;
+            // Interpolate left/right at heelStartY and heelEndY (outline, with kerf)
+            const tHeelStart = (heelStartY - nutY) / (bridgeY - nutY);
+            const tHeelEnd = (heelEndY - nutY) / (bridgeY - nutY);
+            const heelLeftStart = interp(nutLeft, bridgeLeft, tHeelStart);
+            const heelRightStart = interp(nutRight, bridgeRight, tHeelStart);
+            const heelLeftEnd = interp(nutLeft, bridgeLeft, tHeelEnd);
+            const heelRightEnd = interp(nutRight, bridgeRight, tHeelEnd);
             
-            // Calculate asymmetrical heel position
-            const heelTopY = centerY - (stringSpacing / 2) - trebleEMargin - kerfCompensation;
-            const heelBottomY = centerY + (stringSpacing / 2) + bassEMargin + kerfCompensation;
-            
-            // Find 12th fret position
-            const twelfthFretIdx = 11;
-            const twelfthFretPosition = (twelfthFretIdx < fretPositions.length) ? fretPositions[twelfthFretIdx] : lastFretPosition / 2;
-            const twelfthFretX = nutX + twelfthFretPosition;
-            
-            // Calculate width at 12th fret based on taper
-            const taperRatio = twelfthFretPosition / lastFretPosition;
-            const topY12Fret = nutTopY + (taperRatio * (heelTopY - nutTopY));
-            const bottomY12Fret = nutBottomY + (taperRatio * (heelBottomY - nutBottomY));
-            const width12Fret = bottomY12Fret - topY12Fret;
-            
-            // Start building SVG with explicit units
+            // Start building SVG
             let svgContent = `<svg width="${svgWidth}mm" height="${svgHeight}mm" viewBox="0 0 ${svgWidth} ${svgHeight}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
                 <style>
                     .measurement { font-size: 12px; }
                     .title { font-size: 14px; }
                 </style>`;
             
-            // Add title based on template parameters
-            const titleText = `${fretCount} Fret - ${displayScale} Scale`;
-            if (showLabels) {
-                // Position text above centerline
-                const textY = centerY - (nutHalfHeight * 0.6);
-                
-                // Add scale length
-                svgContent += `
-                <text x="${nutX + 40}" y="${textY}" font-family="Arial" font-size="8" text-anchor="start">
-                    ${displayScale}</text>`;
-                
-                // Add nut width
-                svgContent += `
-                <text x="${nutX + 10}" y="${textY}" font-family="Arial" font-size="8" text-anchor="start">
-                    ${nutWidth}mm</text>`;
+            // Create a single continuous path for nut extension, nut, neck, and heel (no bridge, nut extension included)
+            let outlinePath = '';
+            // Start at top left of nut extension if present, else nutLeft, nutY
+            if (nutExtension > 0) {
+                outlinePath += `M${nutLeft},${nutY - nutExtension} `;
+            } else {
+                outlinePath += `M${nutLeft},${nutY} `;
             }
-            
-            // Create neck template path
-            svgContent += `
-            <path d="M${nutX},${nutTopY}
-                  L${nutX},${nutBottomY}
-                  L${heelX - heelRadius},${heelBottomY}
-                  A${heelRadius},${heelRadius} 0 0 0 ${heelX},${heelBottomY - heelRadius}
-                  L${heelX},${heelTopY + heelRadius}
-                  A${heelRadius},${heelRadius} 0 0 0 ${heelX - heelRadius},${heelTopY}
-                  L${nutX},${nutTopY}"
+            // Down left side: nut extension (if any), nut, neck, directly to heel
+            if (nutExtension > 0) {
+                outlinePath += `L${nutLeft},${nutY} `;
+            }
+            outlinePath += `L${heelLeftEnd},${heelEndY - heelRadius} `;
+            outlinePath += `Q${heelLeftEnd},${heelEndY} ${heelLeftEnd + heelRadius},${heelEndY} `;
+            outlinePath += `L${heelRightEnd - heelRadius},${heelEndY} `;
+            outlinePath += `Q${heelRightEnd},${heelEndY} ${heelRightEnd},${heelEndY - heelRadius} `;
+            // Up right side: directly to nut extension (if any)
+            outlinePath += `L${nutRight},${nutY} `;
+            if (nutExtension > 0) {
+                outlinePath += `L${nutRight},${nutY - nutExtension} `;
+                outlinePath += `L${nutLeft},${nutY - nutExtension} `;
+            } else {
+                outlinePath += `L${nutLeft},${nutY} `;
+            }
+            outlinePath += 'Z';
+            svgContent += `\n<path d="${outlinePath}"
                 fill="none" stroke="black" stroke-width="${outlineThickness}"/>`;
+            // Draw the nut as a zero fret line (compensated)
+            svgContent += `\n<line x1="${nutLeft}" y1="${nutY}" x2="${nutRight}" y2="${nutY}" stroke="black" stroke-width="${outlineThickness}"/>`;
             
             // Add fret positions if requested
             if (showFrets) {
                 fretPositions.forEach((pos, idx) => {
-                    // Calculate fret position in SVG coordinates
-                    const fretX = nutX + pos;
-                    
-                    // Calculate taper at this position
-                    const fretPosition = pos / lastFretPosition;
-                    const topYAtFret = nutTopY + (fretPosition * (heelTopY - nutTopY));
-                    const bottomYAtFret = nutBottomY + (fretPosition * (heelBottomY - nutBottomY));
-                    
+                    const fretY = nutY + pos;
+                    const t = (fretY - nutY) / (bridgeY - nutY);
+                    const left = interp(nutLeft, bridgeLeft, t);
+                    const right = interp(nutRight, bridgeRight, t);
                     svgContent += `
-                    <line x1="${fretX}" y1="${topYAtFret}" x2="${fretX}" y2="${bottomYAtFret}" 
+                    <line x1="${left}" y1="${fretY}" x2="${right}" y2="${fretY}" 
                           stroke="#666" stroke-width="${outlineThickness}"/>`;
-                    
                     // Add fret markers at traditional positions
+                    const markerRadius = 2;
                     const markerPositions = [2, 4, 6, 8, 11, 14, 16, 18, 20, 23];
                     if (markerPositions.includes(idx)) {
-                        // Calculate position halfway between current fret and previous fret
-                        const prevFretX = idx === 0 ? nutX : nutX + fretPositions[idx - 1];
-                        const markerX = (fretX + prevFretX) / 2;
-                        
-                        if (idx === 11) { // Special case for 12th fret (double dot)
+                        if (idx === 11 || idx === 23) { // Double dot for 12th and 24th fret
                             svgContent += `
-                            <circle cx="${markerX}" cy="${centerY - 10}" r="4" fill="#ccc"/>
-                            <circle cx="${markerX}" cy="${centerY + 10}" r="4" fill="#ccc"/>`;
+                            <circle cx="${centerX - 10}" cy="${fretY - ((fretY - (idx === 0 ? nutY : nutY + fretPositions[idx - 1])) / 2)}" r="${markerRadius}" fill="#ccc"/>
+                            <circle cx="${centerX + 10}" cy="${fretY - ((fretY - (idx === 0 ? nutY : nutY + fretPositions[idx - 1])) / 2)}" r="${markerRadius}" fill="#ccc"/>`;
                         } else {
                             svgContent += `
-                            <circle cx="${markerX}" cy="${centerY}" r="4" fill="#ccc"/>`;
+                            <circle cx="${centerX}" cy="${fretY - ((fretY - (idx === 0 ? nutY : nutY + fretPositions[idx - 1])) / 2)}" r="${markerRadius}" fill="#ccc"/>`;
                         }
                     }
                 });
-            }
-            
-            // Add labels if requested
-            if (showLabels) {
-                // Calculate text positions relative to neck edges
-                const topTextY = centerY - (nutHalfHeight * 0.6); // Upper text line
-                const bottomTextY = centerY + (nutHalfHeight * 0.6); // Lower text line
-                
-                // Add scale length and nut width near the nut
-                svgContent += `
-                <text x="${nutX + 40}" y="${topTextY}" font-family="Arial" font-size="8" text-anchor="start">
-                    ${displayScale}</text>`;
-                svgContent += `
-                <text x="${nutX + 10}" y="${topTextY}" font-family="Arial" font-size="8" text-anchor="start">
-                    ${nutWidth}mm</text>`;
-                
-                // Add 12th fret width
-                svgContent += `
-                <text x="${twelfthFretX}" y="${topTextY}" font-family="Arial" font-size="8" text-anchor="middle">
-                    ${width12Fret.toFixed(1)}mm</text>`;
-                
-                // Add string spacing near heel
-                svgContent += `
-                <text x="${heelX - heelRadius - 15}" y="${bottomTextY}" font-family="Arial" font-size="8" text-anchor="end">
-                    ${displaySpacing} E-E</text>`;
-                
-                // Add kerf compensation info if not zero
-                if (kerfCompensation !== 0) {
-                    const prefix = kerfCompensation > 0 ? '+' : '';
-                    svgContent += `
-                    <text x="${nutX + 80}" y="${bottomTextY}" font-family="Arial" font-size="8" text-anchor="start">
-                        kerf:${prefix}${kerfCompensation}mm</text>`;
-                }
-            }
-            
-            // Add strings if requested
-            if (showStrings) {
-                // Calculate string positions at nut
-                const nutPlayableWidth = nutWidth - trebleEMargin - bassEMargin; // Width between the margins
-                const nutStringSpacing = nutPlayableWidth / 5; // 5 spaces for 6 strings
-                const stringYPositionsNut = [];
-                for (let i = 0; i < 6; i++) {
-                    stringYPositionsNut.push(nutTopY + trebleEMargin + (nutStringSpacing * i));
-                }
-
-                // Calculate string positions at heel
-                const heelStringSpacing = stringSpacing / 5; // 5 spaces for 6 strings
-                const stringYPositionsHeel = [];
-                for (let i = 0; i < 6; i++) {
-                    stringYPositionsHeel.push(centerY - (stringSpacing / 2) + (heelStringSpacing * i));
-                }
-
-                // Draw strings with extension
-                for (let i = 0; i < 6; i++) {
-                    // Draw extension before nut (parallel)
-                    if (nutExtension > 0) {
-                        svgContent += `
-                        <line x1="${padding}" y1="${stringYPositionsNut[i]}" 
-                              x2="${nutX}" y2="${stringYPositionsNut[i]}" 
-                              stroke="${stringColor}" stroke-width="${stringThickness}"/>`;
-                    }
-                    // Draw main string line
-                    svgContent += `
-                    <line x1="${nutX}" y1="${stringYPositionsNut[i]}" 
-                          x2="${heelX}" y2="${stringYPositionsHeel[i]}" 
-                          stroke="${stringColor}" stroke-width="${stringThickness}"/>`;
-                }
             }
             
             // Add centerline if requested
             if (showCenterline) {
                 if (nutExtension > 0) {
                     svgContent += `
-                    <line x1="${padding}" y1="${centerY}" x2="${nutX}" y2="${centerY}" 
+                    <line x1="${centerX}" y1="${padding}" x2="${centerX}" y2="${nutY}" 
                           stroke="${centerlineColor}" stroke-width="${centerlineThickness}" />`;
                 }
+                const centerlineEndY = showBridge ? bridgeY : heelEndY;
                 svgContent += `
-                <line x1="${nutX}" y1="${centerY}" x2="${heelX}" y2="${centerY}" 
+                <line x1="${centerX}" y1="${nutY}" x2="${centerX}" y2="${centerlineEndY}" 
                       stroke="${centerlineColor}" stroke-width="${centerlineThickness}" />`;
             }
             
-            // Update neck outline to include extension
-            svgContent += `
-            <path d="M${padding},${nutTopY}
-                  L${nutX},${nutTopY}
-                  L${nutX},${nutBottomY}
-                  L${padding},${nutBottomY}
-                  L${padding},${nutTopY}
-                  M${nutX},${nutTopY}
-                  L${nutX},${nutBottomY}
-                  L${heelX - heelRadius},${heelBottomY}
-                  A${heelRadius},${heelRadius} 0 0 0 ${heelX},${heelBottomY - heelRadius}
-                  L${heelX},${heelTopY + heelRadius}
-                  A${heelRadius},${heelRadius} 0 0 0 ${heelX - heelRadius},${heelTopY}
-                  L${nutX},${nutTopY}"
-                fill="none" stroke="black" stroke-width="${outlineThickness}"/>`;
+            // Draw strings if requested
+            if (showStrings) {
+                const yEnd = showBridge ? bridgeY : heelEndY;
+                const stringXEnd = showBridge ? bridgeStringX : bridgeStringX.map((x, i) => interp(nutStringX[i], bridgeStringX[i], (heelEndY - nutY) / (bridgeY - nutY)));
+                for (let i = 0; i < 6; i++) {
+                    // Draw extension before nut (parallel)
+                    if (nutExtension > 0) {
+                        svgContent += `
+                        <line x1="${nutStringX[i]}" y1="${nutY - nutExtension}" x2="${nutStringX[i]}" y2="${nutY}" 
+                              stroke="${stringColor}" stroke-width="${stringThickness}"/>`;
+                    }
+                    svgContent += `
+                    <line x1="${nutStringX[i]}" y1="${nutY}" x2="${stringXEnd[i]}" y2="${yEnd}" 
+                          stroke="${stringColor}" stroke-width="${stringThickness}"/>`;
+                }
+                // Add bridge string spacing indicator ONLY if bridge is shown
+                if (showBridge) {
+                    // Place the indicator slightly above the bridge for clarity
+                    const y = bridgeY - 8;
+                    const x1 = bridgeStringX[0]; // E string
+                    const x2 = bridgeStringX[1]; // A string
+                    const actualSpacing = Math.abs(x2 - x1);
+                    // Draw a smaller, more accurate double-headed arrow and marker ONLY if bridge is shown
+                    svgContent += `
+                    <svg width="0" height="0">
+                        <defs>
+                            <marker id="arrow-small" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto" markerUnits="strokeWidth">
+                                <path d="M0,0 L4,2 L0,4 L1.3,2 Z" fill="#2196F3" />
+                            </marker>
+                        </defs>
+                    </svg>
+                    <g>
+                        <line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="#2196F3" stroke-width="0.8" marker-start="url(#arrow-small)" marker-end="url(#arrow-small)"/>
+                        <text x="${(x1 + x2) / 2}" y="${y - 3}" font-family="Arial" font-size="9" text-anchor="middle" fill="#2196F3">${actualSpacing.toFixed(2)}mm</text>
+                    </g>
+                    `;
+                }
+            }
+            
+            // Add labels if requested
+            if (showLabels) {
+                // Add scale length
+                svgContent += `
+                <text x="${centerX + nutWidth / 2 + 10}" y="${(nutY + bridgeY) / 2}" font-family="Arial" font-size="8" text-anchor="start">
+                    ${displayScale}</text>`;
+                
+                // Add nut width
+                svgContent += `
+                <text x="${centerX}" y="${nutY - 5}" font-family="Arial" font-size="8" text-anchor="middle">
+                    ${nutWidth}mm</text>`;
+                
+                // Add string spacing at bridge
+                if(showBridge) {
+                    svgContent += `
+                    <text x="${centerX}" y="${bridgeY + 15}" font-family="Arial" font-size="8" text-anchor="middle">
+                        ${displaySpacing} E-E</text>`;
+                    }
+            }
             
             // Close SVG
             svgContent += `</svg>`;
