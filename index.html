@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,6 +30,20 @@
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+        .section {
+            border: 1px solid #eee;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+        .section-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
         }
         .output {
             flex: 2;
@@ -162,125 +177,209 @@
     
     <div class="container">
         <div class="controls">
-            <div class="parameter">
-                <label for="fret-count">Fret Count:</label>
-                <select id="fret-count" class="update-trigger">
-                    <option value="22">22 Frets</option>
-                    <option value="24">24 Frets</option>
-                </select>
-            </div>
-            
-            <div class="parameter">
-                <label for="scale-length">Scale Length:</label>
-                <select id="scale-length" class="update-trigger">
-                    <option value="25.5">25.5 inches (648.2mm)</option>
-                    <option value="24.75">24.75 inches (628.65mm)</option>
-                </select>
-            </div>
-            
-            <div class="parameter">
-                <label for="bridge-type">Bridge Type:</label>
-                <select id="bridge-type" class="update-trigger">
-                    <option value="hardtail">Hardtail Bridge</option>
-                    <option value="tom">TOM Bridge</option>
-                </select>
-            </div>
-            
-            <div class="parameter">
-                <label for="nut-width">Nut Width (mm):</label>
-                <input type="range" id="nut-width" class="update-trigger" min="40" max="50" step="0.5" value="43">
-                <div class="value-display">
-                    <span>40mm</span>
-                    <span id="nut-width-value">43mm</span>
-                    <span>50mm</span>
+            <div class="section">
+                <div class="section-title">Basic Settings</div>
+                <div class="parameter">
+                    <label for="fret-count">Fret Count:</label>
+                    <select id="fret-count" class="update-trigger">
+                        <option value="22">22 Frets</option>
+                        <option value="24">24 Frets</option>
+                    </select>
                 </div>
-            </div>
-            
-            <div class="parameter">
-                <label for="string-spacing">String Spacing at Bridge (mm):</label>
-                <input type="range" id="string-spacing" class="update-trigger" min="50" max="60" step="0.5" value="52.5">
-                <div class="value-display">
-                    <span>50mm</span>
-                    <span id="string-spacing-value">52.5mm</span>
-                    <span>60mm</span>
-                </div>
-                <div class="info-text">Typical: Hardtail = 52.5mm, TOM = 51mm (E-to-E)</div>
-            </div>
-            
-            <div class="parameter">
-                <div class="row">
-                    <div class="col">
-                        <label for="bass-e-margin">Bass E Margin (mm):</label>
-                        <input type="range" id="bass-e-margin" class="update-trigger" min="1" max="6" step="0.5" value="3.5">
-                        <div class="value-display">
-                            <span>1mm</span>
-                            <span id="bass-e-margin-value">3.5mm</span>
-                            <span>6mm</span>
+                
+                <div class="parameter">
+                    <label for="scale-length-type">Scale Length:</label>
+                    <select id="scale-length-type" class="update-trigger">
+                        <option value="25.5">25.5 inches (648.2mm) - Fender Standard</option>
+                        <option value="24.75">24.75 inches (628.65mm) - Gibson Standard</option>
+                        <option value="custom">Custom Scale Length</option>
+                    </select>
+                    
+                    <div id="custom-scale" style="display: none; margin-top: 10px;">
+                        <div class="row">
+                            <div class="col">
+                                <label for="custom-scale-value">Length:</label>
+                                <input type="number" id="custom-scale-value" class="update-trigger" step="0.01" value="25.5">
+                            </div>
+                            <div class="col">
+                                <label for="custom-scale-unit">Unit:</label>
+                                <select id="custom-scale-unit" class="update-trigger">
+                                    <option value="inches">inches</option>
+                                    <option value="mm">mm</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col">
-                        <label for="treble-e-margin">Treble E Margin (mm):</label>
-                        <input type="range" id="treble-e-margin" class="update-trigger" min="1" max="6" step="0.5" value="3">
-                        <div class="value-display">
-                            <span>1mm</span>
-                            <span id="treble-e-margin-value">3mm</span>
-                            <span>6mm</span>
+                        <div class="info-text">
+                            <span id="scale-conversion"></span>
                         </div>
                     </div>
                 </div>
-                <div class="info-text">Extra width added beyond the E strings</div>
             </div>
-            
-            <div class="parameter">
-                <label for="heel-position">Heel Position Relative to Last Fret (mm):</label>
-                <input type="range" id="heel-position" class="update-trigger" min="-10" max="100" step="1" value="2">
-                <div class="value-display">
-                    <span>-10mm</span>
-                    <span id="heel-position-value">2mm</span>
-                    <span>100mm</span>
+
+            <div class="section">
+                <div class="section-title">Neck Dimensions</div>
+                <div class="parameter">
+                    <label for="nut-width">Nut Width (mm):</label>
+                    <input type="range" id="nut-width" class="update-trigger" min="40" max="50" step="0.5" value="43">
+                    <div class="value-display">
+                        <span>40mm</span>
+                        <span id="nut-width-value">43mm</span>
+                        <span>50mm</span>
+                    </div>
                 </div>
-                <div class="info-text">Distance from last fret to heel start (negative = overlap)</div>
+
+                <div class="parameter">
+                    <label for="nut-extension">Nut Extension (mm):</label>
+                    <input type="range" id="nut-extension" class="update-trigger" min="0" max="20" step="0.5" value="0">
+                    <div class="value-display">
+                        <span>0mm</span>
+                        <span id="nut-extension-value">0mm</span>
+                        <span>20mm</span>
+                    </div>
+                </div>
+
+                <div class="parameter">
+                    <label for="heel-position">Heel Position Relative to Last Fret (mm):</label>
+                    <input type="range" id="heel-position" class="update-trigger" min="-10" max="100" step="1" value="2">
+                    <div class="value-display">
+                        <span>-10mm</span>
+                        <span id="heel-position-value">2mm</span>
+                        <span>100mm</span>
+                    </div>
+                    <div class="info-text">Distance from last fret to heel start (negative = overlap)</div>
+                </div>
+                
+                <div class="parameter">
+                    <label for="heel-radius">Heel Corner Radius (mm):</label>
+                    <input type="range" id="heel-radius" class="update-trigger" min="1" max="10" step="0.5" value="6.35">
+                    <div class="value-display">
+                        <span>1mm</span>
+                        <span id="heel-radius-value">6.35mm</span>
+                        <span>10mm</span>
+                    </div>
+                </div>
             </div>
-            
-            <div class="parameter">
-                <label for="heel-radius">Heel Corner Radius (mm):</label>
-                <input type="range" id="heel-radius" class="update-trigger" min="1" max="10" step="0.5" value="6.35">
-                <div class="value-display">
-                    <span>1mm</span>
-                    <span id="heel-radius-value">6.35mm</span>
-                    <span>10mm</span>
+
+            <div class="section">
+                <div class="section-title">String Layout</div>
+                <div class="parameter">
+                    <label for="string-spacing-type">String Spacing at Bridge (E-to-E):</label>
+                    <select id="string-spacing-type" class="update-trigger">
+                        <option value="52.5">52.5mm (2.067") - Hardtail Standard</option>
+                        <option value="51">51.0mm (2.008") - TOM Standard</option>
+                        <option value="custom">Custom Spacing</option>
+                    </select>
+                    
+                    <div id="custom-spacing" style="display: none; margin-top: 10px;">
+                        <div class="row">
+                            <div class="col">
+                                <label for="string-spacing-value">Spacing:</label>
+                                <input type="number" id="string-spacing-value" class="update-trigger" step="0.1" value="52.5" min="45" max="65">
+                            </div>
+                            <div class="col">
+                                <label for="string-spacing-unit">Unit:</label>
+                                <select id="string-spacing-unit" class="update-trigger">
+                                    <option value="mm">mm</option>
+                                    <option value="inches">inches</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="info-text">
+                            <span id="spacing-conversion"></span>
+                        </div>
+                    </div>
+                    <div class="info-text">Distance between the outer E strings at the bridge</div>
+                </div>
+                
+                <div class="parameter">
+                    <div class="row">
+                        <div class="col">
+                            <label for="treble-e-margin">Treble E Margin (mm):</label>
+                            <input type="range" id="treble-e-margin" class="update-trigger" min="1" max="6" step="0.5" value="3">
+                            <div class="value-display">
+                                <span>1mm</span>
+                                <span id="treble-e-margin-value">3mm</span>
+                                <span>6mm</span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="bass-e-margin">Bass E Margin (mm):</label>
+                            <input type="range" id="bass-e-margin" class="update-trigger" min="1" max="6" step="0.5" value="3.5">
+                            <div class="value-display">
+                                <span>1mm</span>
+                                <span id="bass-e-margin-value">3.5mm</span>
+                                <span>6mm</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-text">Extra width added beyond the E strings</div>
                 </div>
             </div>
-            
-            <div class="parameter">
-                <label for="kerf-compensation">Kerf Compensation (mm):</label>
-                <input type="range" id="kerf-compensation" class="update-trigger" min="-0.1" max="0.1" step="0.01" value="0">
-                <div class="value-display">
-                    <span>-0.1mm</span>
-                    <span id="kerf-compensation-value">0mm</span>
-                    <span>+0.1mm</span>
+
+            <div class="section">
+                <div class="section-title">Visual Settings</div>
+                <div class="parameter">
+                    <label>Line Thickness (mm):</label>
+                    <div class="row">
+                        <div class="col">
+                            <label for="outline-thickness">Outline:</label>
+                            <input type="number" id="outline-thickness" class="update-trigger" min="0.01" max="1" step="0.01" value="0.1">
+                        </div>
+                        <div class="col">
+                            <label for="centerline-thickness">Centerline:</label>
+                            <input type="number" id="centerline-thickness" class="update-trigger" min="0.01" max="1" step="0.01" value="0.1">
+                        </div>
+                        <div class="col">
+                            <label for="string-thickness">Strings:</label>
+                            <input type="number" id="string-thickness" class="update-trigger" min="0.01" max="1" step="0.01" value="0.05">
+                        </div>
+                    </div>
                 </div>
-                <div class="info-text">Adjust template size to compensate for laser cutter kerf</div>
+
+                <div class="parameter">
+                    <div class="row">
+                        <div class="col">
+                            <label for="centerline-color">Centerline Color:</label>
+                            <input type="color" id="centerline-color" class="update-trigger" value="#000000">
+                        </div>
+                        <div class="col">
+                            <label for="string-color">String Color:</label>
+                            <input type="color" id="string-color" class="update-trigger" value="#000000">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="parameter">
+                    <label for="kerf-compensation">Kerf Compensation (mm):</label>
+                    <input type="range" id="kerf-compensation" class="update-trigger" min="-0.5" max="0.5" step="0.01" value="0">
+                    <div class="value-display">
+                        <span>-0.5mm</span>
+                        <span id="kerf-compensation-value">0mm</span>
+                        <span>+0.5mm</span>
+                    </div>
+                    <div class="info-text">Adjust template size to compensate for laser cutter kerf</div>
+                </div>
             </div>
-            
-            <div class="parameter">
-                <label for="line-thickness">Line Thickness (mm):</label>
-                <input type="number" id="line-thickness" class="update-trigger" min="0.01" max="1" step="0.01" value="0.1">
-            </div>
-            
-            <div class="checkbox-group">
-                <label>Options:</label>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="show-centerline" class="update-trigger" checked>
-                    <label for="show-centerline">Show Centerline</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="show-labels" class="update-trigger" checked>
-                    <label for="show-labels">Show Labels</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="show-frets" class="update-trigger" checked>
-                    <label for="show-frets">Show Fret Positions</label>
+
+            <div class="section">
+                <div class="section-title">Display Options</div>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="show-centerline" class="update-trigger" checked>
+                        <label for="show-centerline">Show Centerline</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="show-strings" class="update-trigger" checked>
+                        <label for="show-strings">Show Strings</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="show-labels" class="update-trigger" checked>
+                        <label for="show-labels">Show Labels</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="show-frets" class="update-trigger" checked>
+                        <label for="show-frets">Show Fret Positions</label>
+                    </div>
                 </div>
             </div>
             
@@ -296,72 +395,99 @@
     </div>
 
     <script>
-        // Update display values for sliders
-        document.getElementById('nut-width').addEventListener('input', (e) => {
-            document.getElementById('nut-width-value').textContent = e.target.value + 'mm';
-        });
-        document.getElementById('string-spacing').addEventListener('input', (e) => {
-            document.getElementById('string-spacing-value').textContent = e.target.value + 'mm';
-        });
-        document.getElementById('bass-e-margin').addEventListener('input', (e) => {
-            document.getElementById('bass-e-margin-value').textContent = e.target.value + 'mm';
-        });
-        document.getElementById('treble-e-margin').addEventListener('input', (e) => {
-            document.getElementById('treble-e-margin-value').textContent = e.target.value + 'mm';
-        });
-        document.getElementById('heel-position').addEventListener('input', (e) => {
-            document.getElementById('heel-position-value').textContent = e.target.value + 'mm';
-        });
-        document.getElementById('heel-radius').addEventListener('input', (e) => {
-            document.getElementById('heel-radius-value').textContent = e.target.value + 'mm';
-        });
-        document.getElementById('kerf-compensation').addEventListener('input', (e) => {
-            const value = parseFloat(e.target.value);
-            const prefix = value >= 0 ? '+' : '';
-            document.getElementById('kerf-compensation-value').textContent = prefix + value + 'mm';
-        });
-
-        // Set default string spacing based on bridge type
-        document.getElementById('bridge-type').addEventListener('change', (e) => {
-            const stringSpacingSlider = document.getElementById('string-spacing');
-            if (e.target.value === 'hardtail') {
-                stringSpacingSlider.value = 52.5; // Default for hardtail bridges
-            } else if (e.target.value === 'tom') {
-                stringSpacingSlider.value = 51.0; // Default for TOM bridges
-            }
-            document.getElementById('string-spacing-value').textContent = stringSpacingSlider.value + 'mm';
-        });
-
         // Calculate fret positions based on scale length
         function calculateFretPositions(scaleLength, fretCount) {
-            const scaleLengthMm = scaleLength * 25.4; // Convert inches to mm
             const fretPositions = [];
-            
             for (let i = 1; i <= fretCount; i++) {
-                // Using the formula: fret position = scale length - (scale length / (2^(n/12)))
-                const fretPos = scaleLengthMm - (scaleLengthMm / Math.pow(2, i/12));
+                const fretPos = scaleLength - (scaleLength / Math.pow(2, i/12));
                 fretPositions.push(fretPos);
             }
-            
             return fretPositions;
         }
 
-        // Generate SVG for the template
+        // Handle scale length conversion display
+        function updateScaleConversion() {
+            const value = parseFloat(document.getElementById('custom-scale-value').value);
+            const unit = document.getElementById('custom-scale-unit').value;
+            const conversionSpan = document.getElementById('scale-conversion');
+            
+            if (unit === 'inches') {
+                conversionSpan.textContent = `${value} inches = ${(value * 25.4).toFixed(2)}mm`;
+            } else {
+                conversionSpan.textContent = `${value}mm = ${(value / 25.4).toFixed(3)} inches`;
+            }
+        }
+
+        // Handle string spacing conversion display
+        function updateSpacingConversion() {
+            const value = parseFloat(document.getElementById('string-spacing-value').value);
+            const unit = document.getElementById('string-spacing-unit').value;
+            const conversionSpan = document.getElementById('spacing-conversion');
+            
+            if (unit === 'mm') {
+                conversionSpan.textContent = `${value}mm = ${(value / 25.4).toFixed(3)} inches`;
+            } else {
+                conversionSpan.textContent = `${value} inches = ${(value * 25.4).toFixed(2)}mm`;
+            }
+        }
+
         function generateTemplate() {
             const fretCount = parseInt(document.getElementById('fret-count').value);
-            const scaleLength = parseFloat(document.getElementById('scale-length').value);
-            const bridgeType = document.getElementById('bridge-type').value;
+            const scaleType = document.getElementById('scale-length-type').value;
+            let scaleLength;
+            let displayScale;
+            
+            if (scaleType === 'custom') {
+                const scaleValue = parseFloat(document.getElementById('custom-scale-value').value);
+                const scaleUnit = document.getElementById('custom-scale-unit').value;
+                if (scaleUnit === 'mm') {
+                    scaleLength = scaleValue;
+                    displayScale = (scaleValue / 25.4).toFixed(3) + '"';
+                } else {
+                    scaleLength = scaleValue * 25.4; // Convert inches to mm
+                    displayScale = scaleValue + '"';
+                }
+            } else {
+                scaleLength = parseFloat(scaleType) * 25.4; // Convert standard scales to mm
+                displayScale = scaleType + '"';
+            }
+
             const nutWidth = parseFloat(document.getElementById('nut-width').value);
-            const stringSpacing = parseFloat(document.getElementById('string-spacing').value);
+            
+            // Handle string spacing with units
+            const spacingType = document.getElementById('string-spacing-type').value;
+            let stringSpacing;
+            let displaySpacing;
+            
+            if (spacingType === 'custom') {
+                const spacingValue = parseFloat(document.getElementById('string-spacing-value').value);
+                const spacingUnit = document.getElementById('string-spacing-unit').value;
+                if (spacingUnit === 'mm') {
+                    stringSpacing = spacingValue;
+                    displaySpacing = `${spacingValue}mm`;
+                } else {
+                    stringSpacing = spacingValue * 25.4; // Convert inches to mm
+                    displaySpacing = `${(stringSpacing).toFixed(1)}mm`;
+                }
+            } else {
+                stringSpacing = parseFloat(spacingType);
+                displaySpacing = `${stringSpacing}mm`;
+            }
+
             const bassEMargin = parseFloat(document.getElementById('bass-e-margin').value);
             const trebleEMargin = parseFloat(document.getElementById('treble-e-margin').value);
             const heelPosition = parseFloat(document.getElementById('heel-position').value);
             const heelRadius = parseFloat(document.getElementById('heel-radius').value);
             const kerfCompensation = parseFloat(document.getElementById('kerf-compensation').value);
-            const lineThickness = parseFloat(document.getElementById('line-thickness').value);
+            const outlineThickness = parseFloat(document.getElementById('outline-thickness').value);
+            const centerlineThickness = parseFloat(document.getElementById('centerline-thickness').value);
+            const stringThickness = parseFloat(document.getElementById('string-thickness').value);
             const showCenterline = document.getElementById('show-centerline').checked;
+            const showStrings = document.getElementById('show-strings').checked;
             const showLabels = document.getElementById('show-labels').checked;
             const showFrets = document.getElementById('show-frets').checked;
+            const centerlineColor = document.getElementById('centerline-color').value;
+            const stringColor = document.getElementById('string-color').value;
             
             // Calculate heel width based on string spacing + margins
             const heelWidth = stringSpacing + bassEMargin + trebleEMargin;
@@ -370,14 +496,16 @@
             const fretPositions = calculateFretPositions(scaleLength, fretCount);
             const lastFretPosition = fretPositions[fretPositions.length - 1];
             
+            const nutExtension = parseFloat(document.getElementById('nut-extension').value);
+            
             // Setup SVG dimensions
             const padding = 50; // 50mm padding
-            const svgWidth = lastFretPosition + heelPosition + (padding * 2);
+            const svgWidth = lastFretPosition + heelPosition + (padding * 2) + nutExtension;
             const svgHeight = heelWidth + (padding * 2);
             const centerY = svgHeight / 2;
             
             // Setup coordinate system
-            const nutX = padding;
+            const nutX = padding + nutExtension;
             const heelX = nutX + lastFretPosition + heelPosition;
             
             // Calculate neck height values with kerf compensation
@@ -387,8 +515,8 @@
             const nutBottomY = centerY + nutHalfHeight;
             
             // Calculate asymmetrical heel position
-            const heelTopY = centerY - (stringSpacing / 2) - bassEMargin - kerfCompensation;
-            const heelBottomY = centerY + (stringSpacing / 2) + trebleEMargin + kerfCompensation;
+            const heelTopY = centerY - (stringSpacing / 2) - trebleEMargin - kerfCompensation;
+            const heelBottomY = centerY + (stringSpacing / 2) + bassEMargin + kerfCompensation;
             
             // Find 12th fret position
             const twelfthFretIdx = 11;
@@ -409,15 +537,15 @@
                 </style>`;
             
             // Add title based on template parameters
-            const titleText = `${fretCount} Fret - ${scaleLength}" Scale - ${bridgeType === 'hardtail' ? 'Hardtail' : 'TOM'} Bridge`;
+            const titleText = `${fretCount} Fret - ${displayScale} Scale`;
             if (showLabels) {
                 // Position text above centerline
-                const textY = centerY - (nutHalfHeight * 0.6); // Position it at 60% towards the top edge
+                const textY = centerY - (nutHalfHeight * 0.6);
                 
                 // Add scale length
                 svgContent += `
                 <text x="${nutX + 40}" y="${textY}" font-family="Arial" font-size="8" text-anchor="start">
-                    ${scaleLength}"</text>`;
+                    ${displayScale}</text>`;
                 
                 // Add nut width
                 svgContent += `
@@ -434,7 +562,7 @@
                   L${heelX},${heelTopY + heelRadius}
                   A${heelRadius},${heelRadius} 0 0 0 ${heelX - heelRadius},${heelTopY}
                   L${nutX},${nutTopY}"
-                fill="none" stroke="black" stroke-width="${lineThickness}"/>`;
+                fill="none" stroke="black" stroke-width="${outlineThickness}"/>`;
             
             // Add fret positions if requested
             if (showFrets) {
@@ -449,7 +577,7 @@
                     
                     svgContent += `
                     <line x1="${fretX}" y1="${topYAtFret}" x2="${fretX}" y2="${bottomYAtFret}" 
-                          stroke="#666" stroke-width="${lineThickness}"/>`;
+                          stroke="#666" stroke-width="${outlineThickness}"/>`;
                     
                     // Add fret markers at traditional positions
                     const markerPositions = [2, 4, 6, 8, 11, 14, 16, 18, 20, 23];
@@ -479,7 +607,7 @@
                 // Add scale length and nut width near the nut
                 svgContent += `
                 <text x="${nutX + 40}" y="${topTextY}" font-family="Arial" font-size="8" text-anchor="start">
-                    ${scaleLength}"</text>`;
+                    ${displayScale}</text>`;
                 svgContent += `
                 <text x="${nutX + 10}" y="${topTextY}" font-family="Arial" font-size="8" text-anchor="start">
                     ${nutWidth}mm</text>`;
@@ -492,7 +620,7 @@
                 // Add string spacing near heel
                 svgContent += `
                 <text x="${heelX - heelRadius - 15}" y="${bottomTextY}" font-family="Arial" font-size="8" text-anchor="end">
-                    ${stringSpacing}mm E-E</text>`;
+                    ${displaySpacing} E-E</text>`;
                 
                 // Add kerf compensation info if not zero
                 if (kerfCompensation !== 0) {
@@ -503,12 +631,67 @@
                 }
             }
             
+            // Add strings if requested
+            if (showStrings) {
+                // Calculate string positions at nut
+                const nutPlayableWidth = nutWidth - trebleEMargin - bassEMargin; // Width between the margins
+                const nutStringSpacing = nutPlayableWidth / 5; // 5 spaces for 6 strings
+                const stringYPositionsNut = [];
+                for (let i = 0; i < 6; i++) {
+                    stringYPositionsNut.push(nutTopY + trebleEMargin + (nutStringSpacing * i));
+                }
+
+                // Calculate string positions at heel
+                const heelStringSpacing = stringSpacing / 5; // 5 spaces for 6 strings
+                const stringYPositionsHeel = [];
+                for (let i = 0; i < 6; i++) {
+                    stringYPositionsHeel.push(centerY - (stringSpacing / 2) + (heelStringSpacing * i));
+                }
+
+                // Draw strings with extension
+                for (let i = 0; i < 6; i++) {
+                    // Draw extension before nut (parallel)
+                    if (nutExtension > 0) {
+                        svgContent += `
+                        <line x1="${padding}" y1="${stringYPositionsNut[i]}" 
+                              x2="${nutX}" y2="${stringYPositionsNut[i]}" 
+                              stroke="${stringColor}" stroke-width="${stringThickness}"/>`;
+                    }
+                    // Draw main string line
+                    svgContent += `
+                    <line x1="${nutX}" y1="${stringYPositionsNut[i]}" 
+                          x2="${heelX}" y2="${stringYPositionsHeel[i]}" 
+                          stroke="${stringColor}" stroke-width="${stringThickness}"/>`;
+                }
+            }
+            
             // Add centerline if requested
             if (showCenterline) {
+                if (nutExtension > 0) {
+                    svgContent += `
+                    <line x1="${padding}" y1="${centerY}" x2="${nutX}" y2="${centerY}" 
+                          stroke="${centerlineColor}" stroke-width="${centerlineThickness}" />`;
+                }
                 svgContent += `
                 <line x1="${nutX}" y1="${centerY}" x2="${heelX}" y2="${centerY}" 
-                      stroke="black" stroke-width="${lineThickness}" />`;
+                      stroke="${centerlineColor}" stroke-width="${centerlineThickness}" />`;
             }
+            
+            // Update neck outline to include extension
+            svgContent += `
+            <path d="M${padding},${nutTopY}
+                  L${nutX},${nutTopY}
+                  L${nutX},${nutBottomY}
+                  L${padding},${nutBottomY}
+                  L${padding},${nutTopY}
+                  M${nutX},${nutTopY}
+                  L${nutX},${nutBottomY}
+                  L${heelX - heelRadius},${heelBottomY}
+                  A${heelRadius},${heelRadius} 0 0 0 ${heelX},${heelBottomY - heelRadius}
+                  L${heelX},${heelTopY + heelRadius}
+                  A${heelRadius},${heelRadius} 0 0 0 ${heelX - heelRadius},${heelTopY}
+                  L${nutX},${nutTopY}"
+                fill="none" stroke="black" stroke-width="${outlineThickness}"/>`;
             
             // Close SVG
             svgContent += `</svg>`;
@@ -519,6 +702,73 @@
             
             return svgContent;
         }
+
+        // Handle scale length type changes
+        document.getElementById('scale-length-type').addEventListener('change', function(e) {
+            const customScaleDiv = document.getElementById('custom-scale');
+            const customScaleValue = document.getElementById('custom-scale-value');
+            const customScaleUnit = document.getElementById('custom-scale-unit');
+            
+            if (e.target.value === 'custom') {
+                customScaleDiv.style.display = 'block';
+            } else {
+                customScaleDiv.style.display = 'none';
+                customScaleValue.value = e.target.value;
+                customScaleUnit.value = 'inches';
+            }
+            updateScaleConversion();
+            generateTemplate();
+        });
+
+        // Handle string spacing type changes
+        document.getElementById('string-spacing-type').addEventListener('change', function(e) {
+            const customSpacingDiv = document.getElementById('custom-spacing');
+            const customSpacingValue = document.getElementById('string-spacing-value');
+            const customSpacingUnit = document.getElementById('string-spacing-unit');
+            
+            if (e.target.value === 'custom') {
+                customSpacingDiv.style.display = 'block';
+            } else {
+                customSpacingDiv.style.display = 'none';
+                customSpacingValue.value = e.target.value;
+                customSpacingUnit.value = 'mm';
+            }
+            updateSpacingConversion();
+            generateTemplate();
+        });
+
+        // Add event listeners for all sliders
+        document.getElementById('nut-width').addEventListener('input', (e) => {
+            document.getElementById('nut-width-value').textContent = e.target.value + 'mm';
+        });
+        document.getElementById('bass-e-margin').addEventListener('input', (e) => {
+            document.getElementById('bass-e-margin-value').textContent = e.target.value + 'mm';
+        });
+        document.getElementById('treble-e-margin').addEventListener('input', (e) => {
+            document.getElementById('treble-e-margin-value').textContent = e.target.value + 'mm';
+        });
+        document.getElementById('heel-position').addEventListener('input', (e) => {
+            document.getElementById('heel-position-value').textContent = e.target.value + 'mm';
+        });
+        document.getElementById('heel-radius').addEventListener('input', (e) => {
+            document.getElementById('heel-radius-value').textContent = e.target.value + 'mm';
+        });
+        document.getElementById('kerf-compensation').addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            const prefix = value >= 0 ? '+' : '';
+            document.getElementById('kerf-compensation-value').textContent = prefix + value + 'mm';
+        });
+        document.getElementById('nut-extension').addEventListener('input', (e) => {
+            document.getElementById('nut-extension-value').textContent = e.target.value + 'mm';
+        });
+
+        // Add event listeners for custom scale inputs
+        document.getElementById('custom-scale-value').addEventListener('input', updateScaleConversion);
+        document.getElementById('custom-scale-unit').addEventListener('change', updateScaleConversion);
+
+        // Add event listeners for custom spacing inputs
+        document.getElementById('string-spacing-value').addEventListener('input', updateSpacingConversion);
+        document.getElementById('string-spacing-unit').addEventListener('change', updateSpacingConversion);
 
         // Add event listeners to all form controls
         document.querySelectorAll('.update-trigger').forEach(element => {
@@ -535,13 +785,22 @@
             
             // Generate filename based on parameters 
             const fretCount = document.getElementById('fret-count').value;
-            const scaleLength = document.getElementById('scale-length').value;
-            const bridgeType = document.getElementById('bridge-type').value;
-            const stringSpacing = document.getElementById('string-spacing').value;
+            const scaleType = document.getElementById('scale-length-type').value;
+            let scaleText;
+            
+            if (scaleType === 'custom') {
+                const scaleValue = document.getElementById('custom-scale-value').value;
+                const scaleUnit = document.getElementById('custom-scale-unit').value;
+                scaleText = scaleUnit === 'mm' ? `${scaleValue}mm` : `${scaleValue}in`;
+            } else {
+                scaleText = `${scaleType}in`;
+            }
+            
+            const stringSpacing = document.getElementById('string-spacing-value').value;
             const heelPosition = document.getElementById('heel-position').value;
             const kerfCompensation = document.getElementById('kerf-compensation').value;
             
-            let filename = `neck-${fretCount}fret-${scaleLength}scale-${bridgeType}-${stringSpacing}mm-heel${heelPosition}mm`;
+            let filename = `neck-${fretCount}fret-${scaleText}-${stringSpacing}mm-heel${heelPosition}mm`;
             if (parseFloat(kerfCompensation) !== 0) {
                 filename += `-kerf${kerfCompensation}`;
             }
