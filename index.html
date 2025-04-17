@@ -220,9 +220,20 @@
             <div class="section">
                 <div class="section-title">Basic Settings</div>
                 <div class="parameter">
+                    <label for="string-count">String Count:</label>
+                    <select id="string-count" class="update-trigger">
+                        <option value="4">4 Strings (Bass/Ukulele)</option>
+                        <option value="5">5 Strings (Bass)</option>
+                        <option value="6" selected>6 Strings (Standard Guitar)</option>
+                        <option value="7">7 Strings</option>
+                        <option value="8">8 Strings</option>
+                    </select>
+                </div>
+                
+                <div class="parameter">
                     <label for="fret-count">Fret Count:</label>
                     <select id="fret-count" class="update-trigger">
-                        <option value="22">22 Frets</option>
+                        <option value="22" selected>22 Frets</option>
                         <option value="24">24 Frets</option>
                     </select>
                 </div>
@@ -230,8 +241,32 @@
                 <div class="parameter">
                     <label for="scale-length-type">Scale Length:</label>
                     <select id="scale-length-type" class="update-trigger">
-                        <option value="25.5">25.5 inches (648.2mm) - Fender Standard</option>
-                        <option value="24.75">24.75 inches (628.65mm) - Gibson Standard</option>
+                        <optgroup label="Ukulele Scales">
+                            <option value="13">13 inches (330.2mm) - Soprano Ukulele</option>
+                            <option value="15">15 inches (381mm) - Concert Ukulele</option>
+                            <option value="17">17 inches (431.8mm) - Tenor Ukulele</option>
+                            <option value="20">20 inches (508mm) - Baritone Ukulele</option>
+                        </optgroup>
+                        <optgroup label="Bass Guitar Scales">
+                            <option value="30">30 inches (762mm) - Short Scale Bass</option>
+                            <option value="32">32 inches (812.8mm) - Medium Scale Bass</option>
+                            <option value="34">34 inches (863.6mm) - Standard Long Scale Bass</option>
+                            <option value="35">35 inches (889mm) - Extra Long Scale Bass</option>
+                            <option value="36">36 inches (914.4mm) - Super Long Scale Bass</option>
+                        </optgroup>
+                        <optgroup label="Guitar Scales">
+                            <option value="22.5">22.5 inches (571.5mm) - Parlor Guitar</option>
+                            <option value="23">23 inches (584.2mm) - Short Scale Electric</option>
+                            <option value="24">24 inches (609.6mm) - Jaguar/Student</option>
+                            <option value="24.75">24.75 inches (628.65mm) - Gibson Standard</option>
+                            <option value="25">25 inches (635mm) - PRS Standard</option>
+                            <option value="25.5" selected>25.5 inches (648.2mm) - Fender Standard</option>
+                            <option value="26.5">26.5 inches (673.1mm) - Baritone/7-String</option>
+                            <option value="27">27 inches (685.8mm) - Extended Baritone</option>
+                            <option value="28">28 inches (711.2mm) - Extra Long Baritone</option>
+                            <option value="28.625">28.625 inches (727.1mm) - 8-String Standard</option>
+                            <option value="29.4">29.4 inches (746.76mm) - Extended 8-String</option>
+                        </optgroup>
                         <option value="custom">Custom Scale Length</option>
                     </select>
                     
@@ -260,8 +295,9 @@
                 <div class="section-title">Neck Dimensions</div>
                 <div class="parameter">
                     <label for="nut-width">Nut Width (mm):</label>
-                    <input type="range" id="nut-width" class="update-trigger" min="40" max="50" step="0.5" value="43">
+                    <input type="range" id="nut-width" class="update-trigger" min="35" max="60" step="0.5" value="43">
                     <span id="nut-width-value" style="margin-left:8px; font-size:0.97em; color:#444;">43mm</span>
+                    <div class="info-text">Typical ranges: Ukulele: 35-38mm, 4-string Bass: 38-45mm, 5-string Bass: 45-48mm, 6-string: 42-44mm, 7-string: 47-50mm, 8-string: 52-56mm</div>
                 </div>
 
                 <div class="parameter">
@@ -287,10 +323,30 @@
             <div class="section">
                 <div class="section-title">String Layout</div>
                 <div class="parameter">
-                    <label for="string-spacing-type">String Spacing at Bridge (E-to-E):</label>
+                    <label for="string-spacing-type">String Spacing (<span id="string-spacing-label">E-to-E</span>):</label>
                     <select id="string-spacing-type" class="update-trigger">
-                        <option value="52.5">52.5mm (2.067") - Hardtail Standard</option>
-                        <option value="51">51.0mm (2.008") - TOM Standard</option>
+                        <optgroup label="4 String">
+                            <option value="40">40.0mm (1.575") - Standard Bass Ukulele</option>
+                            <option value="51">51.0mm (2.008") - Standard Bass Guitar</option>
+                            <option value="54">54.0mm (2.126") - Wide Bass</option>
+                        </optgroup>
+                        <optgroup label="5 String">
+                            <option value="62">62.0mm (2.441") - Standard 5-String Bass</option>
+                            <option value="65">65.0mm (2.559") - Wide 5-String Bass</option>
+                            <option value="67">67.0mm (2.638") - Extra Wide 5-String Bass</option>
+                        </optgroup>
+                        <optgroup label="6 String">
+                            <option value="52.5" selected>52.5mm (2.067") - Hardtail Standard</option>
+                            <option value="51">51.0mm (2.008") - TOM Standard</option>
+                        </optgroup>
+                        <optgroup label="7 String">
+                            <option value="62">62.0mm (2.441") - 7 String Standard</option>
+                            <option value="64">64.0mm (2.520") - Wide 7 String</option>
+                        </optgroup>
+                        <optgroup label="8 String">
+                            <option value="70">70.0mm (2.756") - 8 String Standard</option>
+                            <option value="72">72.0mm (2.835") - Wide 8 String</option>
+                        </optgroup>
                         <option value="custom">Custom Spacing</option>
                     </select>
                     
@@ -312,23 +368,23 @@
                             <span id="spacing-conversion"></span>
                         </div>
                     </div>
-                    <div class="info-text">Distance between the outer E strings at the bridge</div>
+                    <div class="info-text" id="string-spacing-info">Distance between the outer strings at the bridge</div>
                 </div>
                 
                 <div class="parameter">
                     <div class="row">
                         <div class="col">
-                            <label for="treble-e-margin">Treble E Margin (mm):</label>
+                            <label for="treble-e-margin">High String Margin (mm):</label>
                             <input type="range" id="treble-e-margin" class="update-trigger" min="1" max="6" step="0.5" value="3">
                             <span id="treble-e-margin-value" style="margin-left:8px; font-size:0.97em; color:#444;">3mm</span>
                         </div>
                         <div class="col">
-                            <label for="bass-e-margin">Bass E Margin (mm):</label>
+                            <label for="bass-e-margin">Low String Margin (mm):</label>
                             <input type="range" id="bass-e-margin" class="update-trigger" min="1" max="6" step="0.5" value="3.5">
                             <span id="bass-e-margin-value" style="margin-left:8px; font-size:0.97em; color:#444;">3.5mm</span>
                         </div>
                     </div>
-                    <div class="info-text">Extra width added beyond the E strings</div>
+                    <div class="info-text" id="margin-info">Extra width added beyond the E strings</div>
                 </div>
             </div>
 
@@ -446,6 +502,7 @@
         }
 
         function generateTemplate() {
+            const stringCount = parseInt(document.getElementById('string-count').value);
             const fretCount = parseInt(document.getElementById('fret-count').value);
             const scaleType = document.getElementById('scale-length-type').value;
             let scaleLength;
@@ -520,19 +577,30 @@
             const nutRight = centerX + nutWidthComp / 2;
             const bridgeLeft = centerX - bridgeWidthComp / 2;
             const bridgeRight = centerX + bridgeWidthComp / 2;
+
+            // Apply kerf compensation to nut extension and heel
+            const nutExtensionComp = nutExtension + kerfCompensation;
+            const heelRadiusComp = Math.max(heelRadius - kerfCompensation, 0); // Prevent negative radius
+            const heelDepthComp = 20 + kerfCompensation * 2; // Add kerf to both sides of heel depth
+            
             // String positions (NO kerf compensation)
             const nutLeftStr = centerX - nutWidth / 2;
             const nutRightStr = centerX + nutWidth / 2;
             const bridgeLeftStr = centerX - bridgeWidth / 2;
             const bridgeRightStr = centerX + bridgeWidth / 2;
+
+            // Calculate string positions based on string count
             const nutStringStart = nutLeftStr + bassEMargin;
             const nutStringEnd = nutRightStr - trebleEMargin;
-            const nutStringSpacing = (nutStringEnd - nutStringStart) / 5;
-            const nutStringX = Array.from({length: 6}, (_, i) => nutStringStart + i * nutStringSpacing);
             const bridgeStringStart = bridgeLeftStr + bassEMargin;
             const bridgeStringEnd = bridgeRightStr - trebleEMargin;
-            const bridgeStringSpacing = (bridgeStringEnd - bridgeStringStart) / 5;
-            const bridgeStringX = Array.from({length: 6}, (_, i) => bridgeStringStart + i * bridgeStringSpacing);
+            
+            const nutStringSpacing = (nutStringEnd - nutStringStart) / (stringCount - 1);
+            const bridgeStringSpacing = (bridgeStringEnd - bridgeStringStart) / (stringCount - 1);
+            
+            const nutStringX = Array.from({length: stringCount}, (_, i) => nutStringStart + i * nutStringSpacing);
+            const bridgeStringX = Array.from({length: stringCount}, (_, i) => bridgeStringStart + i * bridgeStringSpacing);
+
             // Helper to interpolate between nut and bridge (for outline and for strings)
             function interp(a, b, t) { return a + (b - a) * t; }
             
@@ -541,15 +609,13 @@
             const lastFretPosition = fretPositions[fretPositions.length - 1];
             
             // Setup coordinate system
-            const nutY = padding + nutExtension;
+            const nutY = padding + nutExtensionComp; // Use compensated nut extension
             const bridgeY = nutY + scaleLength;
             
-            // Calculate heel position
-            // heelEndY is where the heel ends (last fret + heel position)
+            // Calculate heel position with compensation
             const heelEndY = nutY + lastFretPosition + heelPosition;
-            // Heel depth (fixed, e.g., 20mm)
-            const heelDepth = 20;
-            const heelStartY = heelEndY - heelDepth;
+            const heelStartY = heelEndY - heelDepthComp; // Use compensated heel depth
+            
             // Interpolate left/right at heelStartY and heelEndY (outline, with kerf)
             const tHeelStart = (heelStartY - nutY) / (bridgeY - nutY);
             const tHeelEnd = (heelEndY - nutY) / (bridgeY - nutY);
@@ -565,27 +631,27 @@
                     .title { font-size: 14px; }
                 </style>`;
             
-            // Create a single continuous path for nut extension, nut, neck, and heel (no bridge, nut extension included)
+            // Create a single continuous path for nut extension, nut, neck, and heel
             let outlinePath = '';
             // Start at top left of nut extension if present, else nutLeft, nutY
-            if (nutExtension > 0) {
-                outlinePath += `M${nutLeft},${nutY - nutExtension} `;
+            if (nutExtensionComp > 0) {
+                outlinePath += `M${nutLeft},${nutY - nutExtensionComp} `;
             } else {
                 outlinePath += `M${nutLeft},${nutY} `;
             }
             // Down left side: nut extension (if any), nut, neck, directly to heel
-            if (nutExtension > 0) {
+            if (nutExtensionComp > 0) {
                 outlinePath += `L${nutLeft},${nutY} `;
             }
-            outlinePath += `L${heelLeftEnd},${heelEndY - heelRadius} `;
-            outlinePath += `Q${heelLeftEnd},${heelEndY} ${heelLeftEnd + heelRadius},${heelEndY} `;
-            outlinePath += `L${heelRightEnd - heelRadius},${heelEndY} `;
-            outlinePath += `Q${heelRightEnd},${heelEndY} ${heelRightEnd},${heelEndY - heelRadius} `;
+            outlinePath += `L${heelLeftEnd},${heelEndY - heelRadiusComp} `;
+            outlinePath += `Q${heelLeftEnd},${heelEndY} ${heelLeftEnd + heelRadiusComp},${heelEndY} `;
+            outlinePath += `L${heelRightEnd - heelRadiusComp},${heelEndY} `;
+            outlinePath += `Q${heelRightEnd},${heelEndY} ${heelRightEnd},${heelEndY - heelRadiusComp} `;
             // Up right side: directly to nut extension (if any)
             outlinePath += `L${nutRight},${nutY} `;
-            if (nutExtension > 0) {
-                outlinePath += `L${nutRight},${nutY - nutExtension} `;
-                outlinePath += `L${nutLeft},${nutY - nutExtension} `;
+            if (nutExtensionComp > 0) {
+                outlinePath += `L${nutRight},${nutY - nutExtensionComp} `;
+                outlinePath += `L${nutLeft},${nutY - nutExtensionComp} `;
             } else {
                 outlinePath += `L${nutLeft},${nutY} `;
             }
@@ -623,7 +689,7 @@
             
             // Add centerline if requested
             if (showCenterline) {
-                if (nutExtension > 0) {
+                if (nutExtensionComp > 0) {
                     svgContent += `
                     <line x1="${centerX}" y1="${padding}" x2="${centerX}" y2="${nutY}" 
                           stroke="${centerlineColor}" stroke-width="${centerlineThickness}" />`;
@@ -638,25 +704,27 @@
             if (showStrings) {
                 const yEnd = showBridge ? bridgeY : heelEndY;
                 const stringXEnd = showBridge ? bridgeStringX : bridgeStringX.map((x, i) => interp(nutStringX[i], bridgeStringX[i], (heelEndY - nutY) / (bridgeY - nutY)));
-                for (let i = 0; i < 6; i++) {
+                
+                for (let i = 0; i < stringCount; i++) {
                     // Draw extension before nut (parallel)
-                    if (nutExtension > 0) {
+                    if (nutExtensionComp > 0) {
                         svgContent += `
-                        <line x1="${nutStringX[i]}" y1="${nutY - nutExtension}" x2="${nutStringX[i]}" y2="${nutY}" 
+                        <line x1="${nutStringX[i]}" y1="${nutY - nutExtensionComp}" x2="${nutStringX[i]}" y2="${nutY}" 
                               stroke="${stringColor}" stroke-width="${stringThickness}"/>`;
                     }
                     svgContent += `
                     <line x1="${nutStringX[i]}" y1="${nutY}" x2="${stringXEnd[i]}" y2="${yEnd}" 
                           stroke="${stringColor}" stroke-width="${stringThickness}"/>`;
                 }
+                
                 // Add bridge string spacing indicator ONLY if bridge is shown
                 if (showBridge) {
                     // Place the indicator slightly above the bridge for clarity
                     const y = bridgeY - 8;
-                    const x1 = bridgeStringX[0]; // E string
-                    const x2 = bridgeStringX[1]; // A string
+                    const x1 = bridgeStringX[0]; // First string
+                    const x2 = bridgeStringX[stringCount - 1]; // Last string
                     const actualSpacing = Math.abs(x2 - x1);
-                    // Draw a smaller, more accurate double-headed arrow and marker ONLY if bridge is shown
+                    
                     svgContent += `
                     <svg width="0" height="0">
                         <defs>
@@ -687,10 +755,12 @@
                 
                 // Add string spacing at bridge
                 if(showBridge) {
+                    // Get the current string labels
+                    const spacingLabel = document.getElementById('string-spacing-label').textContent;
                     svgContent += `
                     <text x="${centerX}" y="${bridgeY + 15}" font-family="Arial" font-size="8" text-anchor="middle">
-                        ${displaySpacing} E-E</text>`;
-                    }
+                        ${displaySpacing} ${spacingLabel}</text>`;
+                }
             }
             
             // Close SVG
@@ -735,6 +805,194 @@
             }
             updateSpacingConversion();
             generateTemplate();
+        });
+
+        // Filter string spacing options based on string count
+        function updateBridgeSpacingOptions(stringCount) {
+            const spacingSelect = document.getElementById('string-spacing-type');
+            const optgroups = spacingSelect.getElementsByTagName('optgroup');
+            const customOption = spacingSelect.querySelector('option[value="custom"]');
+            let hasValidSelection = false;
+
+            // Hide all optgroups first
+            Array.from(optgroups).forEach(group => {
+                group.style.display = 'none';
+            });
+
+            // Show only the matching string count group
+            const matchingGroup = spacingSelect.querySelector(`optgroup[label="${stringCount} String"]`);
+            if (matchingGroup) {
+                matchingGroup.style.display = '';
+                // Check if current selection is in this group
+                const currentOption = spacingSelect.options[spacingSelect.selectedIndex];
+                if (matchingGroup.contains(currentOption)) {
+                    hasValidSelection = true;
+                }
+            }
+
+            // Always show custom option
+            customOption.style.display = '';
+
+            // If current selection is not valid (not in matching group and not custom),
+            // select the first option from the matching group
+            if (!hasValidSelection && currentOption.value !== 'custom') {
+                if (matchingGroup && matchingGroup.getElementsByTagName('option')[0]) {
+                    matchingGroup.getElementsByTagName('option')[0].selected = true;
+                } else {
+                    customOption.selected = true;
+                }
+            }
+        }
+
+        // Filter scale length options based on string count
+        function updateScaleLengthOptions(stringCount) {
+            const scaleSelect = document.getElementById('scale-length-type');
+            const optgroups = scaleSelect.getElementsByTagName('optgroup');
+            const customOption = scaleSelect.querySelector('option[value="custom"]');
+            let currentOption = scaleSelect.options[scaleSelect.selectedIndex];
+            
+            // Show all groups initially
+            Array.from(optgroups).forEach(group => {
+                group.style.display = '';
+            });
+
+            // Highlight recommended ranges based on string count
+            switch(stringCount) {
+                case '4':
+                    // For 4 strings, suggest ukulele or bass scales
+                    if (!currentOption.closest('optgroup') || 
+                        (currentOption.closest('optgroup').label !== "Ukulele Scales" && 
+                         currentOption.closest('optgroup').label !== "Bass Guitar Scales" &&
+                         currentOption.value !== 'custom')) {
+                        // Default to standard bass scale if coming from guitar
+                        scaleSelect.querySelector('option[value="34"]').selected = true;
+                    }
+                    break;
+                case '5':
+                    // For 5 string bass, suggest bass scales
+                    if (!currentOption.closest('optgroup') || 
+                        (currentOption.closest('optgroup').label !== "Bass Guitar Scales" &&
+                         currentOption.value !== 'custom')) {
+                        // Default to 34" scale
+                        scaleSelect.querySelector('option[value="34"]').selected = true;
+                    }
+                    break;
+                case '6':
+                    // For 6 string, suggest guitar scales
+                    if (!currentOption.closest('optgroup') || 
+                        (currentOption.closest('optgroup').label !== "Guitar Scales" &&
+                         currentOption.value !== 'custom')) {
+                        // Default to 25.5" Fender scale
+                        scaleSelect.querySelector('option[value="25.5"]').selected = true;
+                    }
+                    break;
+                case '7':
+                    // For 7 string, suggest baritone/extended scales
+                    if (!currentOption.closest('optgroup') || 
+                        (currentOption.closest('optgroup').label !== "Guitar Scales" &&
+                         currentOption.value !== 'custom')) {
+                        // Default to 26.5" baritone scale
+                        scaleSelect.querySelector('option[value="26.5"]').selected = true;
+                    }
+                    break;
+                case '8':
+                    // For 8 string, suggest extended scales
+                    if (!currentOption.closest('optgroup') || 
+                        (currentOption.closest('optgroup').label !== "Guitar Scales" &&
+                         currentOption.value !== 'custom')) {
+                        // Default to 28.625" 8-string scale
+                        scaleSelect.querySelector('option[value="28.625"]').selected = true;
+                    }
+                    break;
+            }
+
+            // Always show custom option
+            customOption.style.display = '';
+        }
+
+        // Handle string count changes
+        document.getElementById('string-count').addEventListener('change', function(e) {
+            const stringCount = e.target.value;
+            const nutWidth = document.getElementById('nut-width');
+            
+            // Set default nut widths based on string count
+            switch(stringCount) {
+                case '4':
+                    nutWidth.value = '38';
+                    break;
+                case '5':
+                    nutWidth.value = '45';
+                    break;
+                case '6':
+                    nutWidth.value = '43';
+                    break;
+                case '7':
+                    nutWidth.value = '48';
+                    break;
+                case '8':
+                    nutWidth.value = '54';
+                    break;
+            }
+            document.getElementById('nut-width-value').textContent = nutWidth.value + 'mm';
+            
+            // Update string labels first
+            const spacingLabel = document.getElementById('string-spacing-label');
+            const marginInfo = document.getElementById('margin-info');
+            const stringSpacingInfo = document.getElementById('string-spacing-info');
+            const trebleMarginLabel = document.querySelector('label[for="treble-e-margin"]');
+            const bassMarginLabel = document.querySelector('label[for="bass-e-margin"]');
+            
+            let highString, lowString;
+            
+            switch(stringCount) {
+                case '4':
+                    highString = 'G';
+                    lowString = 'E';
+                    break;
+                case '5':
+                    highString = 'G';
+                    lowString = 'B';
+                    break;
+                case '6':
+                    highString = 'E';
+                    lowString = 'E';
+                    break;
+                case '7':
+                    highString = 'E';
+                    lowString = 'B';
+                    break;
+                case '8':
+                    highString = 'E';
+                    lowString = 'F#';
+                    break;
+            }
+            
+            const spacingText = `${lowString}-to-${highString}`;
+            spacingLabel.textContent = spacingText;
+            trebleMarginLabel.textContent = `High ${highString} Margin (mm):`;
+            bassMarginLabel.textContent = `Low ${lowString} Margin (mm):`;
+            marginInfo.textContent = `Extra width added beyond the ${lowString} and ${highString} strings`;
+            stringSpacingInfo.textContent = `Distance between the ${lowString} and ${highString} strings at the bridge`;
+            
+            // Update bridge spacing options
+            updateBridgeSpacingOptions(stringCount);
+            
+            // Update scale length options
+            updateScaleLengthOptions(stringCount);
+            
+            // Generate template after all updates
+            generateTemplate();
+        });
+
+        // Call all update functions on initial load
+        window.addEventListener('load', function() {
+            const stringCount = document.getElementById('string-count').value;
+            updateBridgeSpacingOptions(stringCount);
+            updateScaleLengthOptions(stringCount);
+            
+            // Update initial string labels
+            const e = { target: { value: stringCount }};
+            document.getElementById('string-count').dispatchEvent(new Event('change'));
         });
 
         // Add event listeners for all sliders
@@ -813,9 +1071,6 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         });
-        
-        // Generate initial template
-        window.addEventListener('load', generateTemplate);
     </script>
 </body>
 </html>
