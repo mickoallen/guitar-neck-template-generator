@@ -113,13 +113,13 @@
         #svg-output {
             width: 100%;
             height: 900px;
-            border: 2px solid #e0e0e0;
+            border: none;
             margin-bottom: 18px;
-            background-color: #f8fafc;
+            background: none;
             overflow: hidden;
             position: relative;
             border-radius: 8px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            box-shadow: none;
         }
         #svg-output svg {
             position: absolute;
@@ -209,6 +209,23 @@
                 min-width: 0;
                 width: 100%;
             }
+        }
+        .preview-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 18px;
+        }
+        .preview-row > div {
+            flex: 1 1 0;
+            min-width: 0;
+        }
+        #neck-pocket-output svg {
+            max-width: 320px;
+            max-height: 180px;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
         }
     </style>
 </head>
@@ -388,7 +405,7 @@
                 </div>
             </div>
 
-            <button id="download-btn" class="download-btn">Download SVG</button>
+            <button id="download-btn" class="download-btn">Download Neck SVG</button>
         </div>
         
         <div class="output">
@@ -440,7 +457,7 @@
                         <label for="show-centerline">Show Centerline</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="show-strings" class="update-trigger" checked>
+                        <input type="checkbox" id="show-strings" class="update-trigger">
                         <label for="show-strings">Show Strings</label>
                     </div>
                     <div class="checkbox-item">
@@ -452,15 +469,49 @@
                         <label for="show-frets">Show Fret Positions</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="show-bridge" class="update-trigger" checked>
+                        <input type="checkbox" id="show-bridge" class="update-trigger">
                         <label for="show-bridge">Show Bridge</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="show-neck-pocket" class="update-trigger" checked>
+                        <label for="show-neck-pocket">Show Neck Pocket</label>
                     </div>
                 </div>
             </div>
-            <h2>Preview</h2>
-            <div id="svg-output"></div>
-            <h2>SVG Code</h2>
-            <textarea id="svg-code" readonly></textarea>
+            <div class="preview-row">
+                <div>
+                    <div class="section">
+                        <div class="section-title">Neck Preview</div>
+                        <div id="svg-output"></div>
+                        <h2>SVG Code</h2>
+                        <textarea id="svg-code" readonly></textarea>
+                    </div>
+                </div>
+                <div>
+                    <div class="section">
+                        <div class="section-title">Neck Pocket</div>
+                        <div id="neck-pocket-config" style="display:none; margin-bottom: 12px;">
+                            <div class="parameter">
+                                <label for="neck-pocket-fret">Join at Fret:</label>
+                                <input type="number" id="neck-pocket-fret" min="1" max="24" value="13" style="width:60px;">
+                            </div>
+                            <div class="parameter">
+                                <label for="neck-pocket-kerf">Kerf Compensation (mm):</label>
+                                <input type="range" id="neck-pocket-kerf" min="-0.5" max="0.5" step="0.01" value="0" style="width:100px;">
+                                <span id="neck-pocket-kerf-value" style="margin-left:8px; font-size:0.97em; color:#444;">0mm</span>
+                            </div>
+                            <div class="parameter">
+                                <label for="neck-pocket-thickness">Line Thickness (mm):</label>
+                                <input type="number" id="neck-pocket-thickness" min="0.01" max="1" step="0.01" value="0.1" style="width:70px;">
+                            </div>
+                        </div>
+                        <div id="neck-pocket-output"></div>
+                        <h2>Neck Pocket SVG Code</h2>
+                        <textarea id="neck-pocket-code" readonly></textarea>
+                        <button id="download-neck-pocket-btn" class="download-btn">Download Neck Pocket SVG</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -499,6 +550,68 @@
             } else {
                 conversionSpan.textContent = `${value} inches = ${(value * 25.4).toFixed(2)}mm`;
             }
+        }
+
+        function generateNeckPocketSVG(params) {
+            const {
+                nutY, heelEndY, heelLeftEnd, heelRightEnd, heelRadiusComp, centerX,
+                fretPositions, outlineThickness, centerlineThickness, centerlineColor, fretCount,
+                nutLeft, nutRight, bridgeLeft, bridgeRight, bridgeY,
+                pocketFret, pocketKerf, pocketThickness
+            } = params;
+
+            // Ensure at least 1 and not more than fretCount frets for the pocket
+            if (pocketFret < 1 || pocketFret > fretCount) {
+                return `<svg width='200' height='60'><text x='10' y='30' fill='red'>Invalid fret number for neck pocket</text></svg>`;
+            }
+
+            // Fret position
+            const fretY = nutY + fretPositions[pocketFret - 1];
+
+            // Interpolate left/right at selected fret and heel
+            function interp(a, b, t) { return a + (b - a) * t; }
+            const tFret = (fretY - nutY) / (bridgeY - nutY);
+            const neckLeftFret = interp(nutLeft, bridgeLeft, tFret);
+            const neckRightFret = interp(nutRight, bridgeRight, tFret);
+
+            // Kerf compensation for outline
+            const heelLeftEndKerf = heelLeftEnd - pocketKerf;
+            const heelRightEndKerf = heelRightEnd + pocketKerf;
+            const neckLeftFretKerf = neckLeftFret - pocketKerf;
+            const neckRightFretKerf = neckRightFret + pocketKerf;
+            const heelRadiusKerf = Math.max(heelRadiusComp - pocketKerf, 0);
+            const heelEndYKerf = heelEndY + pocketKerf;
+
+            // For the pocket width, use the max of heel width and fret width, plus margin
+            const neckWidthFret = neckRightFretKerf - neckLeftFretKerf;
+            const heelWidth = heelRightEndKerf - heelLeftEndKerf;
+            const pocketMargin = 25;
+            const pocketWidth = Math.max(neckWidthFret, heelWidth) + pocketMargin * 2;
+            const pocketHeight = (heelEndYKerf - fretY) + 30;
+            const pocketX = (neckLeftFretKerf + neckRightFretKerf) / 2 - pocketWidth / 2;
+            const pocketY = fretY;
+
+            // Path for the heel cutout (clockwise, matching neck taper)
+            let cutoutPath = `M${neckLeftFretKerf},${fretY} `;
+            cutoutPath += `L${heelLeftEndKerf},${heelEndYKerf - heelRadiusKerf} `;
+            cutoutPath += `Q${heelLeftEndKerf},${heelEndYKerf} ${heelLeftEndKerf + heelRadiusKerf},${heelEndYKerf} `;
+            cutoutPath += `L${heelRightEndKerf - heelRadiusKerf},${heelEndYKerf} `;
+            cutoutPath += `Q${heelRightEndKerf},${heelEndYKerf} ${heelRightEndKerf},${heelEndYKerf - heelRadiusKerf} `;
+            cutoutPath += `L${neckRightFretKerf},${fretY} `;
+            cutoutPath += 'Z';
+
+            // Offset all points by pocketX, pocketY
+            function offsetPath(path) {
+                return path.replace(/([0-9.]+),([0-9.]+)/g, (m, x, y) => `${(parseFloat(x) - pocketX).toFixed(2)},${(parseFloat(y) - pocketY).toFixed(2)}`);
+            }
+
+            // Only output lines (no fill, no mask)
+            let svgContent = `<svg width="${pocketWidth}mm" height="${pocketHeight}mm" viewBox="0 0 ${pocketWidth} ${pocketHeight}" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="${pocketWidth}" height="${pocketHeight}" fill="none" stroke="#000" stroke-width="${pocketThickness}" />
+    <path d="${offsetPath(cutoutPath)}" fill="none" stroke="#000" stroke-width="${pocketThickness}" />
+    <line x1="${((neckLeftFretKerf + neckRightFretKerf) / 2 - pocketX).toFixed(2)}" y1="0" x2="${((neckLeftFretKerf + neckRightFretKerf) / 2 - pocketX).toFixed(2)}" y2="${pocketHeight}" stroke="${centerlineColor}" stroke-width="${centerlineThickness}" />
+</svg>`;
+            return svgContent;
         }
 
         function generateTemplate() {
@@ -761,6 +874,29 @@
                     <text x="${centerX}" y="${bridgeY + 15}" font-family="Arial" font-size="8" text-anchor="middle">
                         ${displaySpacing} ${spacingLabel}</text>`;
                 }
+            }
+            
+            // After main SVG generation
+            const showNeckPocket = document.getElementById('show-neck-pocket').checked;
+            const neckPocketConfig = document.getElementById('neck-pocket-config');
+            if (showNeckPocket) {
+                neckPocketConfig.style.display = '';
+                // Get config values
+                const pocketFret = parseInt(document.getElementById('neck-pocket-fret').value) || 13;
+                const pocketKerf = parseFloat(document.getElementById('neck-pocket-kerf').value) || 0;
+                const pocketThickness = parseFloat(document.getElementById('neck-pocket-thickness').value) || 0.1;
+                const neckPocketSVG = generateNeckPocketSVG({
+                    nutY, heelEndY, heelLeftEnd, heelRightEnd, heelRadiusComp, centerX,
+                    fretPositions, outlineThickness, centerlineThickness, centerlineColor, fretCount,
+                    nutLeft, nutRight, bridgeLeft, bridgeRight, bridgeY,
+                    pocketFret, pocketKerf, pocketThickness
+                });
+                document.getElementById('neck-pocket-output').innerHTML = neckPocketSVG;
+                document.getElementById('neck-pocket-code').value = neckPocketSVG;
+            } else {
+                neckPocketConfig.style.display = 'none';
+                document.getElementById('neck-pocket-output').innerHTML = '';
+                document.getElementById('neck-pocket-code').value = '';
             }
             
             // Close SVG
@@ -1070,6 +1206,52 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+        });
+
+        document.getElementById('download-neck-pocket-btn').addEventListener('click', () => {
+            const svgContent = document.getElementById('neck-pocket-code').value;
+            if (!svgContent) return;
+            const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            // Generate filename based on parameters (same as neck SVG, but with -pocket)
+            const fretCount = document.getElementById('fret-count').value;
+            const scaleType = document.getElementById('scale-length-type').value;
+            let scaleText;
+            if (scaleType === 'custom') {
+                const scaleValue = document.getElementById('custom-scale-value').value;
+                const scaleUnit = document.getElementById('custom-scale-unit').value;
+                scaleText = scaleUnit === 'mm' ? `${scaleValue}mm` : `${scaleValue}in`;
+            } else {
+                scaleText = `${scaleType}in`;
+            }
+            const stringSpacing = document.getElementById('string-spacing-value').value;
+            const heelPosition = document.getElementById('heel-position').value;
+            const kerfCompensation = document.getElementById('kerf-compensation').value;
+            let filename = `neck-${fretCount}fret-${scaleText}-${stringSpacing}mm-heel${heelPosition}mm`;
+            if (parseFloat(kerfCompensation) !== 0) {
+                filename += `-kerf${kerfCompensation}`;
+            }
+            filename += '-pocket.svg';
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        // Add event listeners for neck pocket config
+        ['neck-pocket-fret','neck-pocket-kerf','neck-pocket-thickness'].forEach(id => {
+            document.getElementById(id).addEventListener('input', generateTemplate);
+            document.getElementById(id).addEventListener('change', generateTemplate);
+        });
+
+        // Update neck pocket kerf value display
+        document.getElementById('neck-pocket-kerf').addEventListener('input', (e) => {
+            const value = parseFloat(e.target.value);
+            const prefix = value >= 0 ? '+' : '';
+            document.getElementById('neck-pocket-kerf-value').textContent = prefix + value + 'mm';
         });
     </script>
 </body>
