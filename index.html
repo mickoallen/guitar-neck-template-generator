@@ -472,10 +472,6 @@
                         <input type="checkbox" id="show-bridge" class="update-trigger">
                         <label for="show-bridge">Show Bridge</label>
                     </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="show-neck-pocket" class="update-trigger" checked>
-                        <label for="show-neck-pocket">Show Neck Pocket</label>
-                    </div>
                 </div>
             </div>
             <div class="preview-row">
@@ -877,7 +873,7 @@
             }
             
             // After main SVG generation
-            const showNeckPocket = document.getElementById('show-neck-pocket').checked;
+            const showNeckPocket = true;
             const neckPocketConfig = document.getElementById('neck-pocket-config');
             if (showNeckPocket) {
                 neckPocketConfig.style.display = '';
