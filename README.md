@@ -1,2 +1,2 @@
 # guitar-neck-template-generator
-Make guitar neck svgs
+Make guitar neck svgss
