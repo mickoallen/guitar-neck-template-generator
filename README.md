@@ -2,6 +2,8 @@
 
 A simple HTML/JavaScript application for generating SVG files of guitar neck templates.
 
+https://mickoallen.github.io/guitar-neck-template-generator/
+
 ## Description
 
 This application allows users to create customized guitar neck templates by specifying various parameters such as:
