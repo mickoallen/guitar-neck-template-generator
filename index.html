@@ -470,7 +470,11 @@
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="show-frets" class="update-trigger" checked>
-                        <label for="show-frets">Show Fret Positions</label>
+                        <label for="show-frets">Show Fret Lines</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="show-fret-dots" class="update-trigger">
+                        <label for="show-fret-dots">Show Fret Dots</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="show-bridge" class="update-trigger">
@@ -787,7 +791,7 @@
             // Draw the nut as a zero fret line (compensated)
             svgContent += `\n<line x1="${nutLeft}" y1="${nutY}" x2="${nutRight}" y2="${nutY}" stroke="black" stroke-width="${outlineThickness}"/>`;
             
-            // Add fret positions if requested
+            // Add fret lines if requested
             if (showFrets) {
                 fretPositions.forEach((pos, idx) => {
                     const fretY = nutY + pos;
@@ -803,6 +807,14 @@
                     svgContent += `
                     <line x1="${left}" y1="${fretY}" x2="${right}" y2="${fretY}" 
                           stroke="#666" stroke-width="${outlineThickness}"/>`;
+                });
+            }
+            
+            // Add fret dots if requested
+            const showFretDots = document.getElementById('show-fret-dots').checked;
+            if (showFretDots) {
+                fretPositions.forEach((pos, idx) => {
+                    const fretY = nutY + pos;
                     // Add fret markers at traditional positions
                     const markerRadius = 2;
                     const markerPositions = [2, 4, 6, 8, 11, 14, 16, 18, 20, 23];
