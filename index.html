@@ -1025,21 +1025,28 @@
                 const spacingValue = config.bridgeSpacing.toString();
                 const stringCount = config.stringCount;
                 
-                // Find the right option by looking for the matching value in the correct string count group
-                let foundOption = null;
+                // Find the exact optgroup matching the string count
+                let targetOptgroup = null;
                 const optgroups = spacingSelect.querySelectorAll('optgroup');
                 for (const optgroup of optgroups) {
                     const labelText = optgroup.label;
-                    if (labelText.includes(stringCount.toString()) || labelText.includes('String')) {
-                        const option = Array.from(optgroup.querySelectorAll('option')).find(o => o.value === spacingValue);
-                        if (option) {
-                            foundOption = option.value;
-                            break;
-                        }
+                    // Match exact string count like "6 String" for 6 strings
+                    if (labelText === stringCount + ' String') {
+                        targetOptgroup = optgroup;
+                        break;
                     }
                 }
                 
-                // If not found in matching group, just use first match (fallback)
+                // Find the option in the target optgroup
+                let foundOption = null;
+                if (targetOptgroup) {
+                    const option = Array.from(targetOptgroup.querySelectorAll('option')).find(o => o.value === spacingValue);
+                    if (option) {
+                        foundOption = option.value;
+                    }
+                }
+                
+                // Fallback: just use the value directly (browser will pick first match if multiple exist)
                 if (!foundOption) {
                     foundOption = spacingValue;
                 }
