@@ -1049,21 +1049,19 @@
                     }
                 }
                 
-                // Find the option in the target optgroup
-                let foundOption = null;
+                // Find the option in the target optgroup and select it directly
+                let foundOptionElement = null;
                 if (targetOptgroup) {
-                    const option = Array.from(targetOptgroup.querySelectorAll('option')).find(o => o.value === spacingValue);
-                    if (option) {
-                        foundOption = option.value;
-                    }
+                    foundOptionElement = Array.from(targetOptgroup.querySelectorAll('option')).find(o => o.value === spacingValue);
                 }
                 
-                // Fallback: just use the value directly (browser will pick first match if multiple exist)
-                if (!foundOption) {
-                    foundOption = spacingValue;
+                // Select the option element directly to ensure we get the right one
+                if (foundOptionElement) {
+                    foundOptionElement.selected = true;
+                } else {
+                    // Fallback: just use the value directly
+                    spacingSelect.value = spacingValue;
                 }
-                
-                spacingSelect.value = foundOption;
                 
                 // Trigger update
                 document.getElementById('string-count').dispatchEvent(new Event('change'));
