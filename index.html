@@ -1028,10 +1028,23 @@
                 document.getElementById('string-count').value = config.stringCount;
                 
                 document.getElementById('scale-length-type').value = config.scaleLength.toString();
-                document.getElementById('nut-width').value = config.nutWidth;
+                
+                // Update nut width and trigger change to update display
+                const nutWidthInput = document.getElementById('nut-width');
+                nutWidthInput.value = config.nutWidth;
+                nutWidthInput.dispatchEvent(new Event('input'));
+                
                 document.getElementById('fret-count').value = config.fretCount;
-                document.getElementById('nut-extension').value = config.nutExtension;
-                document.getElementById('heel-position').value = config.heelPosition;
+                
+                // Update nut extension and trigger change to update display
+                const nutExtInput = document.getElementById('nut-extension');
+                nutExtInput.value = config.nutExtension;
+                nutExtInput.dispatchEvent(new Event('input'));
+                
+                // Update heel position and trigger change to update display
+                const heelPosInput = document.getElementById('heel-position');
+                heelPosInput.value = config.heelPosition;
+                heelPosInput.dispatchEvent(new Event('input'));
                 
                 // Set bridge spacing more carefully to avoid wrong optgroup
                 const spacingSelect = document.getElementById('string-spacing-type');
