@@ -520,34 +520,59 @@
 
             <div class="section">
                 <div class="section-title">Neck Dimensions</div>
-                <div class="parameter">
-                    <label for="nut-width">Nut Width (mm):</label>
-                    <input type="range" id="nut-width" class="update-trigger" min="35" max="60" step="0.5" value="43">
-                    <span id="nut-width-value" style="margin-left:8px; font-size:0.97em; color:#444;">43mm</span>
-                    <div class="info-text">Typical ranges: Ukulele: 35-38mm, 4-string Bass: 38-45mm, 5-string Bass: 45-48mm, 6-string: 42-44mm, 7-string: 47-50mm, 8-string: 52-56mm</div>
-                </div>
-
-                <div class="parameter">
-                    <label for="nut-extension">Nut Extension (mm):</label>
-                    <input type="range" id="nut-extension" class="update-trigger" min="0" max="20" step="0.5" value="0">
-                    <span id="nut-extension-value" style="margin-left:8px; font-size:0.97em; color:#444;">0mm</span>
-                </div>
-
-                <div class="parameter">
-                    <label for="heel-position">Heel Position Relative to Last Fret (mm):</label>
-                    <input type="range" id="heel-position" class="update-trigger" min="-10" max="100" step="1" value="2">
-                    <span id="heel-position-value" style="margin-left:8px; font-size:0.97em; color:#444;">2mm</span>
-                    <div class="info-text">Distance from last fret to heel start (negative = overlap)</div>
-                </div>
                 
-                <div class="parameter">
-                    <label for="heel-radius">Heel Corner Radius (mm):</label>
-                    <input type="range" id="heel-radius" class="update-trigger" min="0" max="10" step="0.5" value="6.35">
-                    <span id="heel-radius-value" style="margin-left:8px; font-size:0.97em; color:#444;">6.35mm</span>
-                </div>
-                <div class="parameter">
-                    <input type="checkbox" id="no-taper" class="update-trigger">
-                    <label for="no-taper">No Taper (Parallel Neck for Fret Marking)</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                        <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">Nut Width</div>
+                        <label for="nut-width" style="font-size: 0.85em; color: #666;">Width (mm)</label>
+                        <input type="range" id="nut-width" class="update-trigger" min="35" max="60" step="0.5" value="43">
+                        <span id="nut-width-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">43mm</span>
+                        <div class="info-text" style="margin-top: 8px;">Typical: 42-44mm (6-string)</div>
+                    </div>
+
+                    <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                        <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">Nut Extension</div>
+                        <label for="nut-extension" style="font-size: 0.85em; color: #666;">Extension (mm)</label>
+                        <input type="range" id="nut-extension" class="update-trigger" min="0" max="20" step="0.5" value="0">
+                        <span id="nut-extension-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">0mm</span>
+                    </div>
+
+                    <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                        <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">Heel Position</div>
+                        <label for="heel-position" style="font-size: 0.85em; color: #666;">Position (mm)</label>
+                        <input type="range" id="heel-position" class="update-trigger" min="-10" max="100" step="1" value="2">
+                        <span id="heel-position-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">2mm</span>
+                        <div class="info-text" style="margin-top: 8px;">From last fret (negative = overlap)</div>
+                    </div>
+
+                    <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                        <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">Heel Radius</div>
+                        <label for="heel-radius" style="font-size: 0.85em; color: #666;">Radius (mm)</label>
+                        <input type="range" id="heel-radius" class="update-trigger" min="0" max="10" step="0.5" value="6.35">
+                        <span id="heel-radius-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">6.35mm</span>
+                    </div>
+
+                    <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                        <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">Binding Offset</div>
+                        <label for="binding-offset" style="font-size: 0.85em; color: #666;">Offset (mm)</label>
+                        <input type="range" id="binding-offset" class="update-trigger" min="0.1" max="10" step="0.1" value="2">
+                        <span id="binding-offset-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">2mm</span>
+                    </div>
+
+                    <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                        <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">No Taper</div>
+                        <div style="display: flex; align-items: center; cursor: pointer;">
+                            <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                                <span class="toggle-switch">
+                                    <input type="checkbox" id="no-taper" class="update-trigger">
+                                    <span class="toggle-slider"></span>
+                                </span>
+                                <div style="margin-left: 8px; font-size: 0.85em;">
+                                    <div style="color: #666;">Parallel neck</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -670,44 +695,69 @@
             <div class="controls">
                 <div class="section">
                     <div class="section-title">Visual Settings</div>
-                <div class="parameter">
-                    <label>Line Thickness (mm):</label>
-                    <div class="row">
-                        <div class="col">
-                            <label for="outline-thickness">Outline:</label>
-                            <input type="number" id="outline-thickness" class="update-trigger" min="0.01" max="1" step="0.01" value="0.1">
-                        </div>
-                        <div class="col">
-                            <label for="centerline-thickness">Centerline:</label>
-                            <input type="number" id="centerline-thickness" class="update-trigger" min="0.01" max="1" step="0.01" value="0.1">
-                        </div>
-                        <div class="col">
-                            <label for="string-thickness">Strings:</label>
-                            <input type="number" id="string-thickness" class="update-trigger" min="0.01" max="1" step="0.01" value="0.05">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="parameter">
-                    <div class="row">
-                        <div class="col">
-                            <label for="centerline-color">Centerline Color:</label>
-                            <input type="color" id="centerline-color" class="update-trigger" value="#000000">
-                        </div>
-                        <div class="col">
-                            <label for="string-color">String Color:</label>
-                            <input type="color" id="string-color" class="update-trigger" value="#000000">
+                    
+                    <div style="font-size: 0.8em; font-weight: 700; margin-bottom: 12px; color: #374151; text-transform: uppercase;">Line Styles</div>
+                    
+                    <div class="parameter">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: flex-start;">
+                            <div>
+                                <label for="outline-thickness">Outline Thickness:</label>
+                                <input type="number" id="outline-thickness" class="update-trigger" min="0.01" max="1" step="0.01" value="0.1">
+                            </div>
+                            <div>
+                                <label for="outline-color">Outline Color:</label>
+                                <input type="color" id="outline-color" class="update-trigger" value="#000000">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="parameter">
-                    <label for="kerf-compensation">Kerf Compensation (mm):</label>
-                    <input type="range" id="kerf-compensation" class="update-trigger" min="-0.5" max="0.5" step="0.01" value="0">
-                    <span id="kerf-compensation-value" style="margin-left:8px; font-size:0.97em; color:#444;">0mm</span>
-                    <div class="info-text">Adjust template size to compensate for laser cutter kerf</div>
+                    <div class="parameter">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: flex-start;">
+                            <div>
+                                <label for="centerline-thickness">Centerline Thickness:</label>
+                                <input type="number" id="centerline-thickness" class="update-trigger" min="0.01" max="1" step="0.01" value="0.1">
+                            </div>
+                            <div>
+                                <label for="centerline-color">Centerline Color:</label>
+                                <input type="color" id="centerline-color" class="update-trigger" value="#000000">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="parameter">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: flex-start;">
+                            <div>
+                                <label for="string-thickness">Strings Thickness:</label>
+                                <input type="number" id="string-thickness" class="update-trigger" min="0.01" max="1" step="0.01" value="0.05">
+                            </div>
+                            <div>
+                                <label for="string-color">Strings Color:</label>
+                                <input type="color" id="string-color" class="update-trigger" value="#000000">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="parameter">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: flex-start;">
+                            <div>
+                                <label for="binding-thickness">Binding Thickness:</label>
+                                <input type="number" id="binding-thickness" class="update-trigger" min="0.01" max="1" step="0.01" value="0.1">
+                            </div>
+                            <div>
+                                <label for="binding-color">Binding Color:</label>
+                                <input type="color" id="binding-color" class="update-trigger" value="#000000">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="font-size: 0.8em; font-weight: 700; margin-bottom: 12px; margin-top: 16px; color: #374151; text-transform: uppercase;">Other</div>
+                    <div class="parameter">
+                        <label for="kerf-compensation">Kerf Compensation (mm):</label>
+                        <input type="range" id="kerf-compensation" class="update-trigger" min="-0.5" max="0.5" step="0.01" value="0">
+                        <span id="kerf-compensation-value" style="margin-left:8px; font-size:0.97em; color:#444;">0mm</span>
+                        <div class="info-text">Adjust template size to compensate for laser cutter kerf</div>
+                    </div>
                 </div>
-            </div>
             </div>
 
             <div class="controls">
@@ -807,6 +857,18 @@
                             <div style="margin-left: 8px;">
                                 <div style="font-size: 0.95em; font-weight: 500;">Bridge</div>
                                 <div style="font-size: 0.85em; color: #888;">Bridge line indicator</div>
+                            </div>
+                        </label>
+                    </div>
+                    <div style="display: flex; align-items: center; cursor: pointer;">
+                        <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                            <span class="toggle-switch">
+                                <input type="checkbox" id="show-binding" class="update-trigger">
+                                <span class="toggle-slider"></span>
+                            </span>
+                            <div style="margin-left: 8px;">
+                                <div style="font-size: 0.95em; font-weight: 500;">Binding</div>
+                                <div style="font-size: 0.85em; color: #888;">Edge binding lines</div>
                             </div>
                         </label>
                     </div>
@@ -974,10 +1036,15 @@
             const showNutSlots = document.getElementById('show-nut-slots').checked;
             const showLabels = document.getElementById('show-labels').checked;
             const showFrets = document.getElementById('show-frets').checked;
+            const outlineColor = document.getElementById('outline-color').value;
             const centerlineColor = document.getElementById('centerline-color').value;
             const stringColor = document.getElementById('string-color').value;
             const showBridge = document.getElementById('show-bridge').checked;
             const showCenterlineNotch = document.getElementById('show-centerline-notch').checked;
+            const showBinding = document.getElementById('show-binding').checked;
+            const bindingThickness = parseFloat(document.getElementById('binding-thickness').value);
+            const bindingColor = document.getElementById('binding-color').value;
+            const bindingOffset = parseFloat(document.getElementById('binding-offset').value);
             
             // Move nutExtension up before it is used
             const nutExtension = parseFloat(document.getElementById('nut-extension').value);
@@ -1088,9 +1155,9 @@
             }
             outlinePath += 'Z';
             svgContent += `\n<path d="${outlinePath}"
-                fill="none" stroke="black" stroke-width="${outlineThickness}"/>`;
+                fill="none" stroke="${outlineColor}" stroke-width="${outlineThickness}"/>`;
             // Draw the nut as a zero fret line (compensated)
-            svgContent += `\n<line x1="${nutLeft}" y1="${nutY}" x2="${nutRight}" y2="${nutY}" stroke="black" stroke-width="${outlineThickness}"/>`;
+            svgContent += `\n<line x1="${nutLeft}" y1="${nutY}" x2="${nutRight}" y2="${nutY}" stroke="${outlineColor}" stroke-width="${outlineThickness}"/>`;
             
             // Add fret lines if requested
             if (showFrets) {
@@ -1171,6 +1238,24 @@
                     <line x1="${nutStringX[i]}" y1="${nutY - nutExtensionComp}" x2="${nutStringX[i]}" y2="${nutY}" 
                           stroke="${stringColor}" stroke-width="${stringThickness}"/>`;
                 }
+            }
+            
+            // Draw binding lines if requested (parallel to the inside edges of the fretboard)
+            if (showBinding) {
+                const bindingEndY = showBridge ? bridgeY : heelEndY;
+                // Calculate the offset positions at nut and end points to maintain parallel lines
+                // Left binding line (parallel to left edge, inset by bindingOffset)
+                const bindingLeftNut = nutLeft + bindingOffset;
+                const bindingLeftEnd = interp(nutLeft, bridgeLeft, (bindingEndY - nutY) / (bridgeY - nutY)) + bindingOffset;
+                svgContent += `
+                <line x1="${bindingLeftNut}" y1="${nutY}" x2="${bindingLeftEnd}" y2="${bindingEndY}" 
+                      stroke="${bindingColor}" stroke-width="${bindingThickness}"/>`;
+                // Right binding line (parallel to right edge, inset by bindingOffset)
+                const bindingRightNut = nutRight - bindingOffset;
+                const bindingRightEnd = interp(nutRight, bridgeRight, (bindingEndY - nutY) / (bridgeY - nutY)) - bindingOffset;
+                svgContent += `
+                <line x1="${bindingRightNut}" y1="${nutY}" x2="${bindingRightEnd}" y2="${bindingEndY}" 
+                      stroke="${bindingColor}" stroke-width="${bindingThickness}"/>`;
             }
             
             // Draw strings if requested
@@ -1522,6 +1607,9 @@
         });
         document.getElementById('nut-extension').addEventListener('input', (e) => {
             document.getElementById('nut-extension-value').textContent = e.target.value + 'mm';
+        });
+        document.getElementById('binding-offset').addEventListener('input', (e) => {
+            document.getElementById('binding-offset-value').textContent = e.target.value + 'mm';
         });
 
         // Add event listeners for custom scale inputs
