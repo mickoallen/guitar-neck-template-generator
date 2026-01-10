@@ -922,7 +922,8 @@
                 nutWidth: 42,
                 bridgeSpacing: 52.5,
                 fretCount: 22,
-                nutExtension: 0
+                nutExtension: 0,
+                heelPosition: 5
             },
             'fender-tele': {
                 stringCount: 6,
@@ -930,7 +931,8 @@
                 nutWidth: 42,
                 bridgeSpacing: 52.5,
                 fretCount: 22,
-                nutExtension: 0
+                nutExtension: 0,
+                heelPosition: 5
             },
             'gibson-les-paul': {
                 stringCount: 6,
@@ -938,7 +940,8 @@
                 nutWidth: 43,
                 bridgeSpacing: 51,
                 fretCount: 22,
-                nutExtension: 0
+                nutExtension: 0,
+                heelPosition: 5
             },
             'gibson-sg': {
                 stringCount: 6,
@@ -946,7 +949,8 @@
                 nutWidth: 43,
                 bridgeSpacing: 51,
                 fretCount: 22,
-                nutExtension: 0
+                nutExtension: 0,
+                heelPosition: 5
             },
             'prs-se': {
                 stringCount: 6,
@@ -954,7 +958,8 @@
                 nutWidth: 42,
                 bridgeSpacing: 52,
                 fretCount: 22,
-                nutExtension: 0
+                nutExtension: 0,
+                heelPosition: 5
             },
             'ibanez-rg': {
                 stringCount: 6,
@@ -962,7 +967,8 @@
                 nutWidth: 42,
                 bridgeSpacing: 53,
                 fretCount: 24,
-                nutExtension: 0
+                nutExtension: 0,
+                heelPosition: 5
             },
             'jackson-dinky': {
                 stringCount: 6,
@@ -970,7 +976,8 @@
                 nutWidth: 42,
                 bridgeSpacing: 53,
                 fretCount: 24,
-                nutExtension: 0
+                nutExtension: 0,
+                heelPosition: 5
             },
             'martin-dreadnought': {
                 stringCount: 6,
@@ -978,7 +985,8 @@
                 nutWidth: 44.45,
                 bridgeSpacing: 56,
                 fretCount: 20,
-                nutExtension: 0
+                nutExtension: 0,
+                heelPosition: 5
             },
             'taylor-ga': {
                 stringCount: 6,
@@ -986,7 +994,8 @@
                 nutWidth: 44.45,
                 bridgeSpacing: 56,
                 fretCount: 20,
-                nutExtension: 0
+                nutExtension: 0,
+                heelPosition: 5
             },
             'fender-jazz-bass': {
                 stringCount: 4,
@@ -994,7 +1003,8 @@
                 nutWidth: 38,
                 bridgeSpacing: 75,
                 fretCount: 22,
-                nutExtension: 0
+                nutExtension: 0,
+                heelPosition: 5
             },
             'fender-precision-bass': {
                 stringCount: 4,
@@ -1002,7 +1012,8 @@
                 nutWidth: 38,
                 bridgeSpacing: 75,
                 fretCount: 22,
-                nutExtension: 0
+                nutExtension: 0,
+                heelPosition: 5
             }
         };
 
@@ -1019,6 +1030,7 @@
                 document.getElementById('nut-width').value = config.nutWidth;
                 document.getElementById('fret-count').value = config.fretCount;
                 document.getElementById('nut-extension').value = config.nutExtension;
+                document.getElementById('heel-position').value = config.heelPosition;
                 
                 // Set bridge spacing more carefully to avoid wrong optgroup
                 const spacingSelect = document.getElementById('string-spacing-type');
