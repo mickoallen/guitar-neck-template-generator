@@ -173,6 +173,47 @@
         .checkbox-item input {
             margin-right: 5px;
         }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        input:checked + .toggle-slider {
+            background-color: #2196F3;
+        }
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
         .download-btn {
             margin-top: 14px;
             background-color: #2196F3;
@@ -471,38 +512,102 @@
             </div>
             <div class="section">
                 <div class="section-title">Display Options</div>
-                <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="show-centerline" class="update-trigger" checked>
-                        <label for="show-centerline">Show Centerline</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div style="display: flex; align-items: center; cursor: pointer;">
+                        <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                            <span class="toggle-switch">
+                                <input type="checkbox" id="show-centerline" class="update-trigger" checked>
+                                <span class="toggle-slider"></span>
+                            </span>
+                            <div style="margin-left: 8px;">
+                                <div style="font-size: 0.95em; font-weight: 500;">Centerline</div>
+                                <div style="font-size: 0.85em; color: #888;">Full-length center line</div>
+                            </div>
+                        </label>
                     </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="show-centerline-notch" class="update-trigger">
-                        <label for="show-centerline-notch">Centerline Notch</label>
+                    <div style="display: flex; align-items: center; cursor: pointer;">
+                        <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                            <span class="toggle-switch">
+                                <input type="checkbox" id="show-centerline-notch" class="update-trigger">
+                                <span class="toggle-slider"></span>
+                            </span>
+                            <div style="margin-left: 8px;">
+                                <div style="font-size: 0.95em; font-weight: 500;">Centerline Notch</div>
+                                <div style="font-size: 0.85em; color: #888;">Marks at nut & 12th fret</div>
+                            </div>
+                        </label>
                     </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="show-strings" class="update-trigger">
-                        <label for="show-strings">Show Strings</label>
+                    <div style="display: flex; align-items: center; cursor: pointer;">
+                        <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                            <span class="toggle-switch">
+                                <input type="checkbox" id="show-strings" class="update-trigger">
+                                <span class="toggle-slider"></span>
+                            </span>
+                            <div style="margin-left: 8px;">
+                                <div style="font-size: 0.95em; font-weight: 500;">Strings</div>
+                                <div style="font-size: 0.85em; color: #888;">String paths across neck</div>
+                            </div>
+                        </label>
                     </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="show-nut-slots" class="update-trigger" checked>
-                        <label for="show-nut-slots">Show Nut Slots</label>
+                    <div style="display: flex; align-items: center; cursor: pointer;">
+                        <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                            <span class="toggle-switch">
+                                <input type="checkbox" id="show-nut-slots" class="update-trigger" checked>
+                                <span class="toggle-slider"></span>
+                            </span>
+                            <div style="margin-left: 8px;">
+                                <div style="font-size: 0.95em; font-weight: 500;">Nut Slots</div>
+                                <div style="font-size: 0.85em; color: #888;">Slots in nut area</div>
+                            </div>
+                        </label>
                     </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="show-labels" class="update-trigger" checked>
-                        <label for="show-labels">Show Labels</label>
+                    <div style="display: flex; align-items: center; cursor: pointer;">
+                        <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                            <span class="toggle-switch">
+                                <input type="checkbox" id="show-frets" class="update-trigger" checked>
+                                <span class="toggle-slider"></span>
+                            </span>
+                            <div style="margin-left: 8px;">
+                                <div style="font-size: 0.95em; font-weight: 500;">Fret Lines</div>
+                                <div style="font-size: 0.85em; color: #888;">Fret position lines</div>
+                            </div>
+                        </label>
                     </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="show-frets" class="update-trigger" checked>
-                        <label for="show-frets">Show Fret Lines</label>
+                    <div style="display: flex; align-items: center; cursor: pointer;">
+                        <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                            <span class="toggle-switch">
+                                <input type="checkbox" id="show-fret-dots" class="update-trigger">
+                                <span class="toggle-slider"></span>
+                            </span>
+                            <div style="margin-left: 8px;">
+                                <div style="font-size: 0.95em; font-weight: 500;">Fret Dots</div>
+                                <div style="font-size: 0.85em; color: #888;">Dots at fret markers</div>
+                            </div>
+                        </label>
                     </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="show-fret-dots" class="update-trigger">
-                        <label for="show-fret-dots">Show Fret Dots</label>
+                    <div style="display: flex; align-items: center; cursor: pointer;">
+                        <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                            <span class="toggle-switch">
+                                <input type="checkbox" id="show-labels" class="update-trigger" checked>
+                                <span class="toggle-slider"></span>
+                            </span>
+                            <div style="margin-left: 8px;">
+                                <div style="font-size: 0.95em; font-weight: 500;">Labels</div>
+                                <div style="font-size: 0.85em; color: #888;">Dimensions & scale</div>
+                            </div>
+                        </label>
                     </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="show-bridge" class="update-trigger">
-                        <label for="show-bridge">Show Bridge</label>
+                    <div style="display: flex; align-items: center; cursor: pointer;">
+                        <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                            <span class="toggle-switch">
+                                <input type="checkbox" id="show-bridge" class="update-trigger">
+                                <span class="toggle-slider"></span>
+                            </span>
+                            <div style="margin-left: 8px;">
+                                <div style="font-size: 0.95em; font-weight: 500;">Bridge</div>
+                                <div style="font-size: 0.85em; color: #888;">Bridge line indicator</div>
+                            </div>
+                        </label>
                     </div>
                 </div>
             </div>
