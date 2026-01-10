@@ -458,6 +458,55 @@
                 </div>
                 
                 <div class="parameter">
+                    <label for="string-spacing-type">Bridge:</label>
+                    <select id="string-spacing-type" class="update-trigger">
+                        <optgroup label="4 String">
+                            <option value="40">40.0mm (1.575") - Standard Bass Ukulele</option>
+                            <option value="51">51.0mm (2.008") - Standard Bass Guitar</option>
+                            <option value="54">54.0mm (2.126") - Wide Bass</option>
+                        </optgroup>
+                        <optgroup label="5 String">
+                            <option value="62">62.0mm (2.441") - Standard 5-String Bass</option>
+                            <option value="65">65.0mm (2.559") - Wide 5-String Bass</option>
+                            <option value="67">67.0mm (2.638") - Extra Wide 5-String Bass</option>
+                        </optgroup>
+                        <optgroup label="6 String">
+                            <option value="52.5" selected>52.5mm (2.067") - Hardtail Standard</option>
+                            <option value="51">51.0mm (2.008") - TOM Standard</option>
+                        </optgroup>
+                        <optgroup label="7 String">
+                            <option value="62">62.0mm (2.441") - 7 String Standard</option>
+                            <option value="64">64.0mm (2.520") - Wide 7 String</option>
+                        </optgroup>
+                        <optgroup label="8 String">
+                            <option value="70">70.0mm (2.756") - 8 String Standard</option>
+                            <option value="72">72.0mm (2.835") - Wide 8 String</option>
+                        </optgroup>
+                        <option value="custom">Custom Spacing</option>
+                    </select>
+                    
+                    <div id="custom-spacing" style="display: none; margin-top: 10px;">
+                        <div class="row">
+                            <div class="col">
+                                <label for="string-spacing-value">Spacing:</label>
+                                <input type="number" id="string-spacing-value" class="update-trigger" step="0.1" value="52.5" min="45" max="65">
+                            </div>
+                            <div class="col">
+                                <label for="string-spacing-unit">Unit:</label>
+                                <select id="string-spacing-unit" class="update-trigger">
+                                    <option value="mm">mm</option>
+                                    <option value="inches">inches</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="info-text">
+                            <span id="spacing-conversion"></span>
+                        </div>
+                    </div>
+                    <div class="info-text" id="string-spacing-info">Distance between the outer strings at the bridge</div>
+                </div>
+                
+                <div class="parameter">
                     <label for="fret-count">Fret Count:</label>
                     <select id="fret-count" class="update-trigger">
                         <option value="22" selected>22 Frets</option>
@@ -521,126 +570,88 @@
             <div class="section">
                 <div class="section-title">Neck Dimensions</div>
                 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                    <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
-                        <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">Nut Width</div>
-                        <label for="nut-width" style="font-size: 0.85em; color: #666;">Width (mm)</label>
-                        <input type="range" id="nut-width" class="update-trigger" min="35" max="60" step="0.5" value="43">
-                        <span id="nut-width-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">43mm</span>
-                        <div class="info-text" style="margin-top: 8px;">Typical: 42-44mm (6-string)</div>
-                    </div>
+                <div style="margin-bottom: 16px;">
+                    <div style="font-size: 0.8em; font-weight: 700; margin-bottom: 12px; color: #374151; text-transform: uppercase;">Nut</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                            <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">Nut Width</div>
+                            <label for="nut-width" style="font-size: 0.85em; color: #666;">Width (mm)</label>
+                            <input type="range" id="nut-width" class="update-trigger" min="35" max="60" step="0.5" value="43">
+                            <span id="nut-width-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">43mm</span>
+                            <div class="info-text" style="margin-top: 8px;">Typical: 42-44mm (6-string)</div>
+                        </div>
 
-                    <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
-                        <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">Nut Extension</div>
-                        <label for="nut-extension" style="font-size: 0.85em; color: #666;">Extension (mm)</label>
-                        <input type="range" id="nut-extension" class="update-trigger" min="0" max="20" step="0.5" value="0">
-                        <span id="nut-extension-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">0mm</span>
-                    </div>
+                        <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                            <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">Nut Extension</div>
+                            <label for="nut-extension" style="font-size: 0.85em; color: #666;">Extension (mm)</label>
+                            <input type="range" id="nut-extension" class="update-trigger" min="0" max="20" step="0.5" value="0">
+                            <span id="nut-extension-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">0mm</span>
+                        </div>
 
-                    <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
-                        <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">Heel Position</div>
-                        <label for="heel-position" style="font-size: 0.85em; color: #666;">Position (mm)</label>
-                        <input type="range" id="heel-position" class="update-trigger" min="-10" max="100" step="1" value="2">
-                        <span id="heel-position-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">2mm</span>
-                        <div class="info-text" style="margin-top: 8px;">From last fret (negative = overlap)</div>
-                    </div>
-
-                    <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
-                        <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">Heel Radius</div>
-                        <label for="heel-radius" style="font-size: 0.85em; color: #666;">Radius (mm)</label>
-                        <input type="range" id="heel-radius" class="update-trigger" min="0" max="10" step="0.5" value="6.35">
-                        <span id="heel-radius-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">6.35mm</span>
-                    </div>
-
-                    <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
-                        <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">Binding Offset</div>
-                        <label for="binding-offset" style="font-size: 0.85em; color: #666;">Offset (mm)</label>
-                        <input type="range" id="binding-offset" class="update-trigger" min="0.1" max="10" step="0.1" value="2">
-                        <span id="binding-offset-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">2mm</span>
-                    </div>
-
-                    <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
-                        <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">No Taper</div>
-                        <div style="display: flex; align-items: center; cursor: pointer;">
-                            <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
-                                <span class="toggle-switch">
-                                    <input type="checkbox" id="no-taper" class="update-trigger">
-                                    <span class="toggle-slider"></span>
-                                </span>
-                                <div style="margin-left: 8px; font-size: 0.85em;">
-                                    <div style="color: #666;">Parallel neck</div>
+                        <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb; grid-column: 1 / -1;">
+                            <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">String Margins At Nut</div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div>
+                                    <label for="bass-e-margin" style="font-size: 0.85em; color: #666;">Low String (mm)</label>
+                                    <input type="range" id="bass-e-margin" class="update-trigger" min="1" max="6" step="0.5" value="3.5">
+                                    <span id="bass-e-margin-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">3.5mm</span>
                                 </div>
-                            </label>
+                                <div>
+                                    <label for="treble-e-margin" style="font-size: 0.85em; color: #666;">High String (mm)</label>
+                                    <input type="range" id="treble-e-margin" class="update-trigger" min="1" max="6" step="0.5" value="3">
+                                    <span id="treble-e-margin-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">3mm</span>
+                                </div>
+                            </div>
+                            <div class="info-text" style="margin-top: 8px;">Extra width beyond E strings</div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="section">
-                <div class="section-title">String Layout</div>
-                <div class="parameter">
-                    <label for="string-spacing-type">String Spacing (<span id="string-spacing-label">E-to-E</span>):</label>
-                    <select id="string-spacing-type" class="update-trigger">
-                        <optgroup label="4 String">
-                            <option value="40">40.0mm (1.575") - Standard Bass Ukulele</option>
-                            <option value="51">51.0mm (2.008") - Standard Bass Guitar</option>
-                            <option value="54">54.0mm (2.126") - Wide Bass</option>
-                        </optgroup>
-                        <optgroup label="5 String">
-                            <option value="62">62.0mm (2.441") - Standard 5-String Bass</option>
-                            <option value="65">65.0mm (2.559") - Wide 5-String Bass</option>
-                            <option value="67">67.0mm (2.638") - Extra Wide 5-String Bass</option>
-                        </optgroup>
-                        <optgroup label="6 String">
-                            <option value="52.5" selected>52.5mm (2.067") - Hardtail Standard</option>
-                            <option value="51">51.0mm (2.008") - TOM Standard</option>
-                        </optgroup>
-                        <optgroup label="7 String">
-                            <option value="62">62.0mm (2.441") - 7 String Standard</option>
-                            <option value="64">64.0mm (2.520") - Wide 7 String</option>
-                        </optgroup>
-                        <optgroup label="8 String">
-                            <option value="70">70.0mm (2.756") - 8 String Standard</option>
-                            <option value="72">72.0mm (2.835") - Wide 8 String</option>
-                        </optgroup>
-                        <option value="custom">Custom Spacing</option>
-                    </select>
-                    
-                    <div id="custom-spacing" style="display: none; margin-top: 10px;">
-                        <div class="row">
-                            <div class="col">
-                                <label for="string-spacing-value">Spacing:</label>
-                                <input type="number" id="string-spacing-value" class="update-trigger" step="0.1" value="52.5" min="45" max="65">
-                            </div>
-                            <div class="col">
-                                <label for="string-spacing-unit">Unit:</label>
-                                <select id="string-spacing-unit" class="update-trigger">
-                                    <option value="mm">mm</option>
-                                    <option value="inches">inches</option>
-                                </select>
-                            </div>
+                <div style="margin-bottom: 16px;">
+                    <div style="font-size: 0.8em; font-weight: 700; margin-bottom: 12px; color: #374151; text-transform: uppercase;">Heel</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                            <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">Heel Position</div>
+                            <label for="heel-position" style="font-size: 0.85em; color: #666;">Position (mm)</label>
+                            <input type="range" id="heel-position" class="update-trigger" min="-10" max="100" step="1" value="2">
+                            <span id="heel-position-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">2mm</span>
+                            <div class="info-text" style="margin-top: 8px;">From last fret (negative = overlap)</div>
                         </div>
-                        <div class="info-text">
-                            <span id="spacing-conversion"></span>
+
+                        <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                            <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">Heel Radius</div>
+                            <label for="heel-radius" style="font-size: 0.85em; color: #666;">Radius (mm)</label>
+                            <input type="range" id="heel-radius" class="update-trigger" min="0" max="10" step="0.5" value="6.35">
+                            <span id="heel-radius-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">6.35mm</span>
                         </div>
                     </div>
-                    <div class="info-text" id="string-spacing-info">Distance between the outer strings at the bridge</div>
                 </div>
-                
-                <div class="parameter">
-                    <div class="row">
-                        <div class="col">
-                            <label for="treble-e-margin">High String Margin (mm):</label>
-                            <input type="range" id="treble-e-margin" class="update-trigger" min="1" max="6" step="0.5" value="3">
-                            <span id="treble-e-margin-value" style="margin-left:8px; font-size:0.97em; color:#444;">3mm</span>
+
+                <div>
+                    <div style="font-size: 0.8em; font-weight: 700; margin-bottom: 12px; color: #374151; text-transform: uppercase;">Other</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                            <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">Binding Offset</div>
+                            <label for="binding-offset" style="font-size: 0.85em; color: #666;">Offset (mm)</label>
+                            <input type="range" id="binding-offset" class="update-trigger" min="0.1" max="10" step="0.1" value="2">
+                            <span id="binding-offset-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">2mm</span>
                         </div>
-                        <div class="col">
-                            <label for="bass-e-margin">Low String Margin (mm):</label>
-                            <input type="range" id="bass-e-margin" class="update-trigger" min="1" max="6" step="0.5" value="3.5">
-                            <span id="bass-e-margin-value" style="margin-left:8px; font-size:0.97em; color:#444;">3.5mm</span>
+
+                        <div style="background: white; padding: 14px; border-radius: 8px; border: 1px solid #e5e7eb;">
+                            <div style="font-size: 0.9em; font-weight: 600; margin-bottom: 10px; color: #1f2937;">No Taper</div>
+                            <div style="display: flex; align-items: center; cursor: pointer;">
+                                <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                                    <span class="toggle-switch">
+                                        <input type="checkbox" id="no-taper" class="update-trigger">
+                                        <span class="toggle-slider"></span>
+                                    </span>
+                                    <div style="margin-left: 8px; font-size: 0.85em;">
+                                        <div style="color: #666;">Parallel neck</div>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                    <div class="info-text" id="margin-info">Extra width added beyond the E strings</div>
                 </div>
             </div>
 
