@@ -883,6 +883,18 @@
                             </div>
                         </label>
                     </div>
+                    <div style="display: flex; align-items: center; cursor: pointer;">
+                        <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                            <span class="toggle-switch">
+                                <input type="checkbox" id="binding-as-edge" class="update-trigger">
+                                <span class="toggle-slider"></span>
+                            </span>
+                            <div style="margin-left: 8px;">
+                                <div style="font-size: 0.95em; font-weight: 500;">Binding As Edge</div>
+                                <div style="font-size: 0.85em; color: #888;">Use binding lines as outline</div>
+                            </div>
+                        </label>
+                    </div>
                 </div>
             </div>
             </div>
@@ -1056,6 +1068,7 @@
             const bindingThickness = parseFloat(document.getElementById('binding-thickness').value);
             const bindingColor = document.getElementById('binding-color').value;
             const bindingOffset = parseFloat(document.getElementById('binding-offset').value);
+            const bindingAsEdge = document.getElementById('binding-as-edge').checked;
             
             // Move nutExtension up before it is used
             const nutExtension = parseFloat(document.getElementById('nut-extension').value);
@@ -1134,35 +1147,55 @@
                     .title { font-size: 14px; }
                 </style>`;
             
+            // Determine outline edges based on binding-as-edge toggle
+            let outlineNutLeft = nutLeft;
+            let outlineNutRight = nutRight;
+            let outlineBridgeLeft = bridgeLeft;
+            let outlineBridgeRight = bridgeRight;
+            
+            if (bindingAsEdge && showBinding) {
+                // Calculate binding line positions
+                const bindingEndY = showBridge ? bridgeY : heelEndY;
+                const tBinding = (bindingEndY - nutY) / (bridgeY - nutY);
+                
+                // Use binding lines as the outline edges
+                outlineNutLeft = centerX - (nutWidth + kerfCompensation * 2) / 2 + bindingOffset;
+                outlineNutRight = centerX + (nutWidth + kerfCompensation * 2) / 2 - bindingOffset;
+                outlineBridgeLeft = interp(nutLeft, bridgeLeft, tBinding) + bindingOffset;
+                outlineBridgeRight = interp(nutRight, bridgeRight, tBinding) - bindingOffset;
+            }
+            
             // Create a single continuous path for nut extension, nut, neck, and heel
             let outlinePath = '';
-            // Start at top left of nut extension if present, else nutLeft, nutY
-            if (nutExtensionComp > 0) {
-                outlinePath += `M${nutLeft},${nutY - nutExtensionComp} `;
+            // Start at top left of nut extension if present, else outlineNutLeft, nutY
+            if (nutExtensionComp > 0 && !bindingAsEdge) {
+                outlinePath += `M${outlineNutLeft},${nutY - nutExtensionComp} `;
             } else {
-                outlinePath += `M${nutLeft},${nutY} `;
+                outlinePath += `M${outlineNutLeft},${nutY} `;
             }
             // Down left side: nut extension (if any), nut, neck, directly to heel
-            if (nutExtensionComp > 0) {
-                outlinePath += `L${nutLeft},${nutY} `;
+            if (nutExtensionComp > 0 && !bindingAsEdge) {
+                outlinePath += `L${outlineNutLeft},${nutY} `;
             }
             if (noTaper) {
-                outlinePath += `L${nutLeft},${heelEndY - heelRadiusComp} `;
-                outlinePath += `Q${nutLeft},${heelEndY} ${nutLeft + heelRadiusComp},${heelEndY} `;
-                outlinePath += `L${nutRight - heelRadiusComp},${heelEndY} `;
-                outlinePath += `Q${nutRight},${heelEndY} ${nutRight},${heelEndY - heelRadiusComp} `;
+                outlinePath += `L${outlineNutLeft},${heelEndY - heelRadiusComp} `;
+                outlinePath += `Q${outlineNutLeft},${heelEndY} ${outlineNutLeft + heelRadiusComp},${heelEndY} `;
+                outlinePath += `L${outlineNutRight - heelRadiusComp},${heelEndY} `;
+                outlinePath += `Q${outlineNutRight},${heelEndY} ${outlineNutRight},${heelEndY - heelRadiusComp} `;
             } else {
-                outlinePath += `L${heelLeftEnd},${heelEndY - heelRadiusComp} `;
-                outlinePath += `Q${heelLeftEnd},${heelEndY} ${heelLeftEnd + heelRadiusComp},${heelEndY} `;
-                outlinePath += `L${heelRightEnd - heelRadiusComp},${heelEndY} `;
-                outlinePath += `Q${heelRightEnd},${heelEndY} ${heelRightEnd},${heelEndY - heelRadiusComp} `;
+                const heelLeftEnd_outline = interp(outlineNutLeft, outlineBridgeLeft, (heelEndY - nutY) / (bridgeY - nutY));
+                const heelRightEnd_outline = interp(outlineNutRight, outlineBridgeRight, (heelEndY - nutY) / (bridgeY - nutY));
+                outlinePath += `L${heelLeftEnd_outline},${heelEndY - heelRadiusComp} `;
+                outlinePath += `Q${heelLeftEnd_outline},${heelEndY} ${heelLeftEnd_outline + heelRadiusComp},${heelEndY} `;
+                outlinePath += `L${heelRightEnd_outline - heelRadiusComp},${heelEndY} `;
+                outlinePath += `Q${heelRightEnd_outline},${heelEndY} ${heelRightEnd_outline},${heelEndY - heelRadiusComp} `;
             }
-            outlinePath += `L${nutRight},${nutY} `;
-            if (nutExtensionComp > 0) {
-                outlinePath += `L${nutRight},${nutY - nutExtensionComp} `;
-                outlinePath += `L${nutLeft},${nutY - nutExtensionComp} `;
+            outlinePath += `L${outlineNutRight},${nutY} `;
+            if (nutExtensionComp > 0 && !bindingAsEdge) {
+                outlinePath += `L${outlineNutRight},${nutY - nutExtensionComp} `;
+                outlinePath += `L${outlineNutLeft},${nutY - nutExtensionComp} `;
             } else {
-                outlinePath += `L${nutLeft},${nutY} `;
+                outlinePath += `L${outlineNutLeft},${nutY} `;
             }
             outlinePath += 'Z';
             svgContent += `\n<path d="${outlinePath}"
