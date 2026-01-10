@@ -1011,12 +1011,40 @@
             const neckId = e.target.value;
             if (neckId && standardNecks[neckId]) {
                 const config = standardNecks[neckId];
+                
+                // Set string count first (important for bridge spacing matching)
                 document.getElementById('string-count').value = config.stringCount;
+                
                 document.getElementById('scale-length-type').value = config.scaleLength.toString();
                 document.getElementById('nut-width').value = config.nutWidth;
-                document.getElementById('string-spacing-type').value = config.bridgeSpacing.toString();
                 document.getElementById('fret-count').value = config.fretCount;
                 document.getElementById('nut-extension').value = config.nutExtension;
+                
+                // Set bridge spacing more carefully to avoid wrong optgroup
+                const spacingSelect = document.getElementById('string-spacing-type');
+                const spacingValue = config.bridgeSpacing.toString();
+                const stringCount = config.stringCount;
+                
+                // Find the right option by looking for the matching value in the correct string count group
+                let foundOption = null;
+                const optgroups = spacingSelect.querySelectorAll('optgroup');
+                for (const optgroup of optgroups) {
+                    const labelText = optgroup.label;
+                    if (labelText.includes(stringCount.toString()) || labelText.includes('String')) {
+                        const option = Array.from(optgroup.querySelectorAll('option')).find(o => o.value === spacingValue);
+                        if (option) {
+                            foundOption = option.value;
+                            break;
+                        }
+                    }
+                }
+                
+                // If not found in matching group, just use first match (fallback)
+                if (!foundOption) {
+                    foundOption = spacingValue;
+                }
+                
+                spacingSelect.value = foundOption;
                 
                 // Trigger update
                 document.getElementById('string-count').dispatchEvent(new Event('change'));
