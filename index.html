@@ -485,6 +485,10 @@
                         <label for="show-strings">Show Strings</label>
                     </div>
                     <div class="checkbox-item">
+                        <input type="checkbox" id="show-nut-slots" class="update-trigger" checked>
+                        <label for="show-nut-slots">Show Nut Slots</label>
+                    </div>
+                    <div class="checkbox-item">
                         <input type="checkbox" id="show-labels" class="update-trigger" checked>
                         <label for="show-labels">Show Labels</label>
                     </div>
@@ -702,6 +706,7 @@
             const stringThickness = parseFloat(document.getElementById('string-thickness').value);
             const showCenterline = document.getElementById('show-centerline').checked;
             const showStrings = document.getElementById('show-strings').checked;
+            const showNutSlots = document.getElementById('show-nut-slots').checked;
             const showLabels = document.getElementById('show-labels').checked;
             const showFrets = document.getElementById('show-frets').checked;
             const centerlineColor = document.getElementById('centerline-color').value;
@@ -891,6 +896,15 @@
                     svgContent += `
                     <line x1="${centerX}" y1="${fret12Y - notchHalfLength}" x2="${centerX}" y2="${fret12Y + notchHalfLength}" 
                           stroke="${centerlineColor}" stroke-width="${centerlineThickness}" />`;
+                }
+            }
+            
+            // Draw nut slots if requested (only in nut extension area)
+            if (showNutSlots && nutExtensionComp > 0) {
+                for (let i = 0; i < stringCount; i++) {
+                    svgContent += `
+                    <line x1="${nutStringX[i]}" y1="${nutY - nutExtensionComp}" x2="${nutStringX[i]}" y2="${nutY}" 
+                          stroke="${stringColor}" stroke-width="${stringThickness}"/>`;
                 }
             }
             
