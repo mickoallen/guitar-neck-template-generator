@@ -120,14 +120,30 @@
             position: relative;
             border-radius: 8px;
             box-shadow: none;
+            cursor: grab;
+        }
+        #svg-output.dragging {
+            cursor: grabbing;
         }
         #svg-output svg {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform-origin: center center;
             max-width: 100%;
             max-height: 100%;
+        }
+        .zoom-info {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 10;
+            pointer-events: none;
         }
         #svg-code {
             width: 100%;
@@ -489,7 +505,15 @@
             <div class="preview-row">
                 <div>
                     <div class="section">
-                        <div class="section-title">Neck Preview</div>
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                            <div class="section-title" style="margin-bottom: 0;">Neck Preview</div>
+                            <div style="display: flex; gap: 6px; align-items: center;">
+                                <button id="zoom-minus-btn" style="padding: 4px 8px; background-color: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85em;">−</button>
+                                <span id="zoom-display" style="font-size: 0.92em; color: #666; min-width: 80px; text-align: center;">Zoom: 100%</span>
+                                <button id="zoom-plus-btn" style="padding: 4px 8px; background-color: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85em;">+</button>
+                                <button id="reset-zoom-btn" style="padding: 4px 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85em;">Reset</button>
+                            </div>
+                        </div>
                         <div id="svg-output"></div>
                         <h2>SVG Code</h2>
                         <textarea id="svg-code" readonly></textarea>
@@ -621,6 +645,8 @@
 </svg>`;
             return svgContent;
         }
+
+        let isInitialLoad = true;
 
         function generateTemplate() {
             const stringCount = parseInt(document.getElementById('string-count').value);
@@ -960,6 +986,14 @@
             // Display SVG
             document.getElementById('svg-output').innerHTML = svgContent;
             document.getElementById('svg-code').value = svgContent;
+            
+            // Reset zoom and pan only on initial load, otherwise reapply current transform
+            if (isInitialLoad) {
+                resetZoomAndPan();
+                isInitialLoad = false;
+            } else {
+                updateSvgTransform();
+            }
             
             return svgContent;
         }
@@ -1307,6 +1341,86 @@
             const value = parseFloat(e.target.value);
             const prefix = value >= 0 ? '+' : '';
             document.getElementById('neck-pocket-kerf-value').textContent = prefix + value + 'mm';
+        });
+
+        // SVG Zoom and Pan functionality
+        const svgOutput = document.getElementById('svg-output');
+        const zoomDisplay = document.getElementById('zoom-display');
+        const resetZoomBtn = document.getElementById('reset-zoom-btn');
+        const zoomPlusBtn = document.getElementById('zoom-plus-btn');
+        const zoomMinusBtn = document.getElementById('zoom-minus-btn');
+        let zoomLevel = 1;
+        let panX = 0;
+        let panY = 0;
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+
+        function updateSvgTransform() {
+            const svg = svgOutput.querySelector('svg');
+            if (svg) {
+                svg.style.transform = `translate(calc(-50% + ${panX}px), calc(-50% + ${panY}px)) scale(${zoomLevel})`;
+            }
+        }
+
+        // Mouse wheel zoom
+        svgOutput.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const zoomFactor = 0.1;
+            const oldZoom = zoomLevel;
+            zoomLevel += (e.deltaY > 0 ? -1 : 1) * zoomFactor;
+            zoomLevel = Math.max(0.1, Math.min(5, zoomLevel)); // Clamp between 0.1x and 5x
+            
+            zoomDisplay.textContent = `Zoom: ${(zoomLevel * 100).toFixed(0)}%`;
+            updateSvgTransform();
+        });
+
+        // Mouse down to start panning
+        svgOutput.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            dragStartX = e.clientX - panX;
+            dragStartY = e.clientY - panY;
+            svgOutput.classList.add('dragging');
+        });
+
+        // Mouse move to pan
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                panX = e.clientX - dragStartX;
+                panY = e.clientY - dragStartY;
+                updateSvgTransform();
+            }
+        });
+
+        // Mouse up to stop panning
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            svgOutput.classList.remove('dragging');
+        });
+
+        // Reset zoom and pan on double-click or reset button
+        function resetZoomAndPan() {
+            zoomLevel = 1;
+            panX = 0;
+            panY = 0;
+            zoomDisplay.textContent = `Zoom: 100%`;
+            updateSvgTransform();
+        }
+
+        svgOutput.addEventListener('dblclick', resetZoomAndPan);
+        resetZoomBtn.addEventListener('click', resetZoomAndPan);
+
+        // Zoom plus/minus buttons
+        zoomPlusBtn.addEventListener('click', () => {
+            zoomLevel = Math.min(5, zoomLevel + 0.1);
+            zoomDisplay.textContent = `Zoom: ${(zoomLevel * 100).toFixed(0)}%`;
+            updateSvgTransform();
+        });
+
+        zoomMinusBtn.addEventListener('click', () => {
+            zoomLevel = Math.max(0.1, zoomLevel - 0.1);
+            zoomDisplay.textContent = `Zoom: ${(zoomLevel * 100).toFixed(0)}%`;
+            updateSvgTransform();
         });
     </script>
 </body>
