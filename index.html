@@ -447,6 +447,30 @@
                 <div class="section">
                     <div class="section-title">Basic Settings</div>
                 <div class="parameter">
+                    <label for="standard-neck">Standard Neck:</label>
+                    <select id="standard-neck">
+                        <option value="">Custom</option>
+                        <optgroup label="Electric Guitars">
+                            <option value="fender-strat">Fender Stratocaster</option>
+                            <option value="fender-tele">Fender Telecaster</option>
+                            <option value="gibson-les-paul">Gibson Les Paul</option>
+                            <option value="gibson-sg">Gibson SG</option>
+                            <option value="prs-se">PRS SE</option>
+                            <option value="ibanez-rg">Ibanez RG</option>
+                            <option value="jackson-dinky">Jackson Dinky</option>
+                        </optgroup>
+                        <optgroup label="Acoustic Guitars">
+                            <option value="martin-dreadnought">Martin Dreadnought</option>
+                            <option value="taylor-ga">Taylor Grand Auditorium</option>
+                        </optgroup>
+                        <optgroup label="Bass">
+                            <option value="fender-jazz-bass">Fender Jazz Bass</option>
+                            <option value="fender-precision-bass">Fender Precision Bass</option>
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <div class="parameter">
                     <label for="string-count">String Count:</label>
                     <select id="string-count" class="update-trigger">
                         <option value="4">4 Strings (Bass/Ukulele)</option>
@@ -890,6 +914,116 @@
     </div>
 
     <script>
+        // Standard neck presets
+        const standardNecks = {
+            'fender-strat': {
+                stringCount: 6,
+                scaleLength: 25.5,
+                nutWidth: 42,
+                bridgeSpacing: 52.5,
+                fretCount: 22,
+                nutExtension: 0
+            },
+            'fender-tele': {
+                stringCount: 6,
+                scaleLength: 25.5,
+                nutWidth: 42,
+                bridgeSpacing: 52.5,
+                fretCount: 22,
+                nutExtension: 0
+            },
+            'gibson-les-paul': {
+                stringCount: 6,
+                scaleLength: 24.75,
+                nutWidth: 43,
+                bridgeSpacing: 52.5,
+                fretCount: 22,
+                nutExtension: 0
+            },
+            'gibson-sg': {
+                stringCount: 6,
+                scaleLength: 24.75,
+                nutWidth: 43,
+                bridgeSpacing: 52.5,
+                fretCount: 22,
+                nutExtension: 0
+            },
+            'prs-se': {
+                stringCount: 6,
+                scaleLength: 25,
+                nutWidth: 42,
+                bridgeSpacing: 52.5,
+                fretCount: 22,
+                nutExtension: 0
+            },
+            'ibanez-rg': {
+                stringCount: 6,
+                scaleLength: 25.5,
+                nutWidth: 42,
+                bridgeSpacing: 52.5,
+                fretCount: 24,
+                nutExtension: 0
+            },
+            'jackson-dinky': {
+                stringCount: 6,
+                scaleLength: 25.5,
+                nutWidth: 42,
+                bridgeSpacing: 52.5,
+                fretCount: 24,
+                nutExtension: 0
+            },
+            'martin-dreadnought': {
+                stringCount: 6,
+                scaleLength: 25.4,
+                nutWidth: 44.45,
+                bridgeSpacing: 54.5,
+                fretCount: 20,
+                nutExtension: 0
+            },
+            'taylor-ga': {
+                stringCount: 6,
+                scaleLength: 25.5,
+                nutWidth: 44.45,
+                bridgeSpacing: 54.5,
+                fretCount: 20,
+                nutExtension: 0
+            },
+            'fender-jazz-bass': {
+                stringCount: 4,
+                scaleLength: 34,
+                nutWidth: 38,
+                bridgeSpacing: 51,
+                fretCount: 22,
+                nutExtension: 0
+            },
+            'fender-precision-bass': {
+                stringCount: 4,
+                scaleLength: 34,
+                nutWidth: 38,
+                bridgeSpacing: 51,
+                fretCount: 22,
+                nutExtension: 0
+            }
+        };
+
+        // Handle standard neck selection
+        document.getElementById('standard-neck').addEventListener('change', function(e) {
+            const neckId = e.target.value;
+            if (neckId && standardNecks[neckId]) {
+                const config = standardNecks[neckId];
+                document.getElementById('string-count').value = config.stringCount;
+                document.getElementById('scale-length-type').value = config.scaleLength.toString();
+                document.getElementById('nut-width').value = config.nutWidth;
+                document.getElementById('string-spacing-type').value = config.bridgeSpacing.toString();
+                document.getElementById('fret-count').value = config.fretCount;
+                document.getElementById('nut-extension').value = config.nutExtension;
+                
+                // Trigger update
+                document.getElementById('string-count').dispatchEvent(new Event('change'));
+                updateSVG();
+            }
+        });
+
         // Calculate fret positions based on scale length
         function calculateFretPositions(scaleLength, fretCount) {
             const fretPositions = [];
