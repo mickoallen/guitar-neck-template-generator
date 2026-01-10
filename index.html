@@ -461,6 +461,10 @@
                         <label for="show-centerline">Show Centerline</label>
                     </div>
                     <div class="checkbox-item">
+                        <input type="checkbox" id="show-centerline-notch" class="update-trigger">
+                        <label for="show-centerline-notch">Centerline Notch</label>
+                    </div>
+                    <div class="checkbox-item">
                         <input type="checkbox" id="show-strings" class="update-trigger">
                         <label for="show-strings">Show Strings</label>
                     </div>
@@ -677,6 +681,7 @@
             const centerlineColor = document.getElementById('centerline-color').value;
             const stringColor = document.getElementById('string-color').value;
             const showBridge = document.getElementById('show-bridge').checked;
+            const showCenterlineNotch = document.getElementById('show-centerline-notch').checked;
             
             // Move nutExtension up before it is used
             const nutExtension = parseFloat(document.getElementById('nut-extension').value);
@@ -842,6 +847,25 @@
                 svgContent += `
                 <line x1="${centerX}" y1="${nutY}" x2="${centerX}" y2="${centerlineEndY}" 
                       stroke="${centerlineColor}" stroke-width="${centerlineThickness}" />`;
+            }
+            
+            // Add centerline notches if requested (1mm vertical marks at nut and 12th fret)
+            if (showCenterlineNotch) {
+                const notchLength = 1; // 1mm length
+                const notchHalfLength = notchLength / 2;
+                
+                // Nut line notch (vertical)
+                svgContent += `
+                <line x1="${centerX}" y1="${nutY - notchHalfLength}" x2="${centerX}" y2="${nutY + notchHalfLength}" 
+                      stroke="${centerlineColor}" stroke-width="${centerlineThickness}" />`;
+                
+                // 12th fret notch (if it exists, vertical)
+                if (fretPositions.length >= 12) {
+                    const fret12Y = nutY + fretPositions[11]; // 12th fret is at index 11
+                    svgContent += `
+                    <line x1="${centerX}" y1="${fret12Y - notchHalfLength}" x2="${centerX}" y2="${fret12Y + notchHalfLength}" 
+                          stroke="${centerlineColor}" stroke-width="${centerlineThickness}" />`;
+                }
             }
             
             // Draw strings if requested
