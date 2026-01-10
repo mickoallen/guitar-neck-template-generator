@@ -1018,10 +1018,14 @@
             }
         };
 
+        // Flag to prevent auto-switching to custom during preset application
+        let applyingPreset = false;
+
         // Handle standard neck selection
         document.getElementById('standard-neck').addEventListener('change', function(e) {
             const neckId = e.target.value;
             if (neckId && standardNecks[neckId]) {
+                applyingPreset = true;
                 const config = standardNecks[neckId];
                 
                 // Set string count first (important for bridge spacing matching)
@@ -1029,22 +1033,22 @@
                 
                 document.getElementById('scale-length-type').value = config.scaleLength.toString();
                 
-                // Update nut width and trigger change to update display
+                // Update nut width and display
                 const nutWidthInput = document.getElementById('nut-width');
                 nutWidthInput.value = config.nutWidth;
-                nutWidthInput.dispatchEvent(new Event('input'));
+                document.getElementById('nut-width-value').textContent = config.nutWidth + 'mm';
                 
                 document.getElementById('fret-count').value = config.fretCount;
                 
-                // Update nut extension and trigger change to update display
+                // Update nut extension and display
                 const nutExtInput = document.getElementById('nut-extension');
                 nutExtInput.value = config.nutExtension;
-                nutExtInput.dispatchEvent(new Event('input'));
+                document.getElementById('nut-extension-value').textContent = config.nutExtension + 'mm';
                 
-                // Update heel position and trigger change to update display
+                // Update heel position and display
                 const heelPosInput = document.getElementById('heel-position');
                 heelPosInput.value = config.heelPosition;
-                heelPosInput.dispatchEvent(new Event('input'));
+                document.getElementById('heel-position-value').textContent = config.heelPosition + 'mm';
                 
                 // Set bridge spacing more carefully to avoid wrong optgroup
                 const spacingSelect = document.getElementById('string-spacing-type');
@@ -1077,9 +1081,11 @@
                     spacingSelect.value = spacingValue;
                 }
                 
-                // Trigger update
+                // Trigger update after all values are set
                 document.getElementById('string-count').dispatchEvent(new Event('change'));
-                updateSVG();
+                setTimeout(() => {
+                    applyingPreset = false;
+                }, 0);
             }
         });
 
@@ -1517,11 +1523,9 @@
                 
                 // Add string spacing at bridge
                 if(showBridge) {
-                    // Get the current string labels
-                    const spacingLabel = document.getElementById('string-spacing-label').textContent;
                     svgContent += `
                     <text x="${centerX}" y="${bridgeY + 15}" font-family="Arial" font-size="8" text-anchor="middle">
-                        ${displaySpacing} ${spacingLabel}</text>`;
+                        ${displaySpacing}</text>`;
                 }
             }
             
@@ -1706,27 +1710,7 @@
         // Handle string count changes
         document.getElementById('string-count').addEventListener('change', function(e) {
             const stringCount = e.target.value;
-            const nutWidth = document.getElementById('nut-width');
-            
-            // Set default nut widths based on string count
-            switch(stringCount) {
-                case '4':
-                    nutWidth.value = '38';
-                    break;
-                case '5':
-                    nutWidth.value = '45';
-                    break;
-                case '6':
-                    nutWidth.value = '43';
-                    break;
-                case '7':
-                    nutWidth.value = '48';
-                    break;
-                case '8':
-                    nutWidth.value = '54';
-                    break;
-            }
-            document.getElementById('nut-width-value').textContent = nutWidth.value + 'mm';
+            // Note: Don't automatically reset nut width, let user or preset decide
             
             // Update string labels first
             const spacingLabel = document.getElementById('string-spacing-label');
@@ -1761,11 +1745,11 @@
             }
             
             const spacingText = `${lowString}-to-${highString}`;
-            spacingLabel.textContent = spacingText;
-            trebleMarginLabel.textContent = `High ${highString} Margin (mm):`;
-            bassMarginLabel.textContent = `Low ${lowString} Margin (mm):`;
-            marginInfo.textContent = `Extra width added beyond the ${lowString} and ${highString} strings`;
-            stringSpacingInfo.textContent = `Distance between the ${lowString} and ${highString} strings at the bridge`;
+            if (spacingLabel) spacingLabel.textContent = spacingText;
+            if (trebleMarginLabel) trebleMarginLabel.textContent = `High ${highString} Margin (mm):`;
+            if (bassMarginLabel) bassMarginLabel.textContent = `Low ${lowString} Margin (mm):`;
+            if (marginInfo) marginInfo.textContent = `Extra width added beyond the ${lowString} and ${highString} strings`;
+            if (stringSpacingInfo) stringSpacingInfo.textContent = `Distance between the ${lowString} and ${highString} strings at the bridge`;
             
             // Update bridge spacing options
             updateBridgeSpacingOptions(stringCount);
@@ -1992,6 +1976,44 @@
             zoomLevel = Math.max(0.1, zoomLevel - 0.1);
             zoomDisplay.textContent = `Zoom: ${(zoomLevel * 100).toFixed(0)}%`;
             updateSvgTransform();
+        });
+
+        // Initialize with Fender Strat on page load
+        window.addEventListener('load', () => {
+            document.getElementById('standard-neck').value = 'fender-strat';
+            document.getElementById('standard-neck').dispatchEvent(new Event('change'));
+        });
+
+        // Change to Custom preset when user manually adjusts controls
+        const controlsToWatch = [
+            'string-count',
+            'scale-length-type',
+            'nut-width',
+            'string-spacing-type',
+            'fret-count',
+            'nut-extension',
+            'heel-position',
+            'heel-radius',
+            'binding-offset',
+            'bass-e-margin',
+            'treble-e-margin',
+            'no-taper'
+        ];
+
+        controlsToWatch.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('change', () => {
+                    if (!applyingPreset) {
+                        document.getElementById('standard-neck').value = '';
+                    }
+                });
+                element.addEventListener('input', () => {
+                    if (!applyingPreset) {
+                        document.getElementById('standard-neck').value = '';
+                    }
+                });
+            }
         });
     </script>
 </body>
