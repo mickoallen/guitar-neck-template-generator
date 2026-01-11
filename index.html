@@ -1204,6 +1204,8 @@
                 
                 // Trigger update after all values are set
                 document.getElementById('string-count').dispatchEvent(new Event('change'));
+                document.getElementById('fret-count').dispatchEvent(new Event('change'));
+                document.getElementById('scale-length-type').dispatchEvent(new Event('change'));
                 setTimeout(() => {
                     applyingPreset = false;
                 }, 0);
