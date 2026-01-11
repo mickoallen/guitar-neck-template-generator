@@ -1027,7 +1027,8 @@
                 bridgeSpacing: 52.5,
                 fretCount: 22,
                 nutExtension: 0,
-                heelPosition: 5
+                heelPosition: 5,
+                taperType: 'fender'
             },
             'fender-tele': {
                 stringCount: 6,
@@ -1036,7 +1037,8 @@
                 bridgeSpacing: 52.5,
                 fretCount: 22,
                 nutExtension: 0,
-                heelPosition: 5
+                heelPosition: 5,
+                taperType: 'fender'
             },
             'gibson-les-paul': {
                 stringCount: 6,
@@ -1045,7 +1047,8 @@
                 bridgeSpacing: 51,
                 fretCount: 22,
                 nutExtension: 0,
-                heelPosition: 5
+                heelPosition: 5,
+                taperType: 'gibson'
             },
             'gibson-sg': {
                 stringCount: 6,
@@ -1054,7 +1057,8 @@
                 bridgeSpacing: 51,
                 fretCount: 22,
                 nutExtension: 0,
-                heelPosition: 5
+                heelPosition: 5,
+                taperType: 'gibson'
             },
             'prs-se': {
                 stringCount: 6,
@@ -1063,7 +1067,8 @@
                 bridgeSpacing: 51,
                 fretCount: 22,
                 nutExtension: 0,
-                heelPosition: 5
+                heelPosition: 5,
+                taperType: 'prs'
             },
             'ibanez-rg': {
                 stringCount: 6,
@@ -1072,7 +1077,8 @@
                 bridgeSpacing: 53,
                 fretCount: 24,
                 nutExtension: 0,
-                heelPosition: 5
+                heelPosition: 5,
+                taperType: 'ibanez-rg'
             },
             'jackson-dinky': {
                 stringCount: 6,
@@ -1081,7 +1087,8 @@
                 bridgeSpacing: 53,
                 fretCount: 24,
                 nutExtension: 0,
-                heelPosition: 5
+                heelPosition: 5,
+                taperType: 'ibanez-rg'
             },
             'martin-dreadnought': {
                 stringCount: 6,
@@ -1090,7 +1097,8 @@
                 bridgeSpacing: 56,
                 fretCount: 20,
                 nutExtension: 0,
-                heelPosition: 5
+                heelPosition: 5,
+                taperType: 'acoustic'
             },
             'taylor-ga': {
                 stringCount: 6,
@@ -1099,7 +1107,8 @@
                 bridgeSpacing: 56,
                 fretCount: 20,
                 nutExtension: 0,
-                heelPosition: 5
+                heelPosition: 5,
+                taperType: 'acoustic'
             },
             'fender-jazz-bass': {
                 stringCount: 4,
@@ -1108,7 +1117,8 @@
                 bridgeSpacing: 75,
                 fretCount: 22,
                 nutExtension: 0,
-                heelPosition: 5
+                heelPosition: 5,
+                taperType: 'bass-4'
             },
             'fender-precision-bass': {
                 stringCount: 4,
@@ -1117,7 +1127,8 @@
                 bridgeSpacing: 75,
                 fretCount: 22,
                 nutExtension: 0,
-                heelPosition: 5
+                heelPosition: 5,
+                taperType: 'bass-4'
             }
         };
 
@@ -1182,6 +1193,11 @@
                 } else {
                     // Fallback: just use the value directly
                     spacingSelect.value = spacingValue;
+                }
+                
+                // Set taper type if available in config
+                if (config.taperType) {
+                    document.getElementById('neck-taper-type').value = config.taperType;
                 }
                 
                 // Trigger update after all values are set
