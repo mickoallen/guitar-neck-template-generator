@@ -436,6 +436,49 @@
                 grid-template-columns: 1fr;
             }
         }
+        .ruler-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            display: none;
+        }
+        .adjustable-ruler {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #22c55e;
+            cursor: ns-resize;
+            pointer-events: auto;
+            left: 0;
+        }
+        .adjustable-ruler::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 12px;
+            top: -5px;
+            left: 0;
+            cursor: ns-resize;
+        }
+        .ruler-label {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #22c55e;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
@@ -696,7 +739,9 @@
                             <button id="reset-zoom-btn" style="padding: 4px 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85em;">Reset</button>
                         </div>
                     </div>
-                    <div id="svg-output"></div>
+                    <div id="svg-output">
+                        <div class="ruler-container" id="ruler-container"></div>
+                    </div>
                     <h2>SVG Code</h2>
                     <textarea id="svg-code" readonly></textarea>
                 </div>
@@ -911,12 +956,12 @@
                     <div style="display: flex; align-items: center; cursor: pointer;">
                         <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
                             <span class="toggle-switch">
-                                <input type="checkbox" id="show-12th-fret-ruler" class="update-trigger">
+                                <input type="checkbox" id="show-ruler">
                                 <span class="toggle-slider"></span>
                             </span>
                             <div style="margin-left: 8px;">
-                                <div style="font-size: 0.95em; font-weight: 500;">12th Fret Ruler</div>
-                                <div style="font-size: 0.85em; color: #888;">Width measurement</div>
+                                <div style="font-size: 0.95em; font-weight: 500;">Adjustable Ruler</div>
+                                <div style="font-size: 0.85em; color: #888;">Drag to measure width</div>
                             </div>
                         </label>
                     </div>
@@ -1266,7 +1311,6 @@
             const bindingThickness = parseFloat(document.getElementById('binding-thickness').value);
             const bindingColor = document.getElementById('binding-color').value;
             const bindingOffset = parseFloat(document.getElementById('binding-offset').value);
-            const show12thFretRuler = document.getElementById('show-12th-fret-ruler').checked;
             
             // Move nutExtension up before it is used
             const nutExtension = parseFloat(document.getElementById('nut-extension').value);
@@ -1551,33 +1595,7 @@
                 }
             }
             
-            // Add 12th fret width measurement (if enabled)
-            if (show12thFretRuler && fretPositions.length >= 12) {
-                const fret12Y = nutY + fretPositions[11]; // 12th fret is at index 11
-                let left12, right12;
-                if (noTaper) {
-                    left12 = nutLeft;
-                    right12 = nutRight;
-                } else {
-                    const neckWidthAt12 = nutWidth + (taperRate * (fret12Y - nutY));
-                    left12 = centerX - neckWidthAt12 / 2;
-                    right12 = centerX + neckWidthAt12 / 2;
-                }
-                const width12 = right12 - left12;
-                
-                // Draw measurement line on the 12th fret
-                svgContent += `
-                <svg width="0" height="0">
-                    <defs>
-                        <marker id="arrow-12fret" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto" markerUnits="strokeWidth">
-                            <path d="M0,0 L4,2 L0,4 L1.3,2 Z" fill="#FF6B6B" />
-                        </marker>
-                    </defs>
-                </svg>
-                <line x1="${left12}" y1="${fret12Y}" x2="${right12}" y2="${fret12Y}" stroke="#FF6B6B" stroke-width="1.5" marker-start="url(#arrow-12fret)" marker-end="url(#arrow-12fret)"/>
-                <text x="${centerX}" y="${fret12Y - 4}" font-family="Arial" font-size="10" font-weight="bold" text-anchor="middle" fill="#FF6B6B">${width12.toFixed(2)}mm</text>`;
-            }
-            
+
             // After main SVG generation
             const showNeckPocket = true;
             const neckPocketConfig = document.getElementById('neck-pocket-config');
@@ -1605,19 +1623,159 @@
             svgContent += `</svg>`;
             
             // Display SVG
-            document.getElementById('svg-output').innerHTML = svgContent;
-            document.getElementById('svg-code').value = svgContent;
-            
-            // Reset zoom and pan only on initial load, otherwise reapply current transform
-            if (isInitialLoad) {
-                resetZoomAndPan();
-                isInitialLoad = false;
-            } else {
-                updateSvgTransform();
+             document.getElementById('svg-output').innerHTML = `<div class="ruler-container" id="ruler-container"></div>` + svgContent;
+             document.getElementById('svg-code').value = svgContent;
+             
+             // Store layout info for ruler calculations
+             window.neckLayout = {
+                 nutY, heelEndY, nutWidth, taperRate, centerX, scaleLength,
+                 noTaper, nutLeft, nutRight, svgWidth, svgHeight
+             };
+             
+             // Initialize ruler
+             initializeAdjustableRuler();
+             
+             // Reset zoom and pan only on initial load, otherwise reapply current transform
+             if (isInitialLoad) {
+                 resetZoomAndPan();
+                 isInitialLoad = false;
+             } else {
+                 updateSvgTransform();
+             }
+             
+             return svgContent;
             }
-            
-            return svgContent;
-        }
+
+            // Global ruler state
+            let isDraggingRuler = false;
+            let rulerStartY = 0;
+
+            // Initialize adjustable ruler
+            function initializeAdjustableRuler() {
+             const rulerContainer = document.getElementById('ruler-container');
+             if (!rulerContainer) return;
+             rulerContainer.innerHTML = '';
+             
+             const ruler = document.createElement('div');
+             ruler.className = 'adjustable-ruler';
+             ruler.id = 'adjustable-ruler';
+             ruler.style.top = '200px';  // Start at a fixed position
+             
+             const label = document.createElement('div');
+             label.className = 'ruler-label';
+             label.id = 'ruler-label';
+             label.textContent = 'Drag to measure';
+             ruler.appendChild(label);
+             
+             rulerContainer.appendChild(ruler);
+             
+             // Preserve the display state based on checkbox
+             const showRulerCheckbox = document.getElementById('show-ruler');
+             if (showRulerCheckbox) {
+                 rulerContainer.style.display = showRulerCheckbox.checked ? 'block' : 'none';
+             }
+             
+             // Add event listener for mousedown on the ruler
+             ruler.addEventListener('mousedown', (e) => {
+                 e.stopPropagation();  // Prevent SVG pan from triggering
+                 isDraggingRuler = true;
+                 rulerStartY = e.clientY;
+             });
+             
+             // Initialize the label
+             updateRulerLabel(ruler.offsetTop);
+            }
+
+            // Setup global event listeners once (not in initializeAdjustableRuler)
+            document.addEventListener('mousemove', (e) => {
+             if (!isDraggingRuler || !window.neckLayout) return;
+             
+             const ruler = document.getElementById('adjustable-ruler');
+             if (!ruler) return;
+             
+             const svgOutput = document.getElementById('svg-output');
+             if (!svgOutput) return;
+             
+             // Get the current position relative to the SVG container
+             const currentTop = ruler.offsetTop || (svgOutput.offsetHeight / 2);
+             const deltaY = e.clientY - rulerStartY;
+             const newTop = Math.max(0, Math.min(svgOutput.offsetHeight, currentTop + deltaY));
+             
+             ruler.style.top = newTop + 'px';
+             rulerStartY = e.clientY;
+             
+             // Calculate neck width at this Y position
+             updateRulerLabel(newTop);
+            });
+
+            document.addEventListener('mouseup', () => {
+             isDraggingRuler = false;
+            });
+
+            function updateRulerLabel(pixelY) {
+             const layout = window.neckLayout;
+             const label = document.getElementById('ruler-label');
+             
+             if (!layout || !label) {
+                 if (label) label.textContent = 'Loading...';
+                 return;
+             }
+             
+             const svgOutput = document.getElementById('svg-output');
+             const svg = svgOutput.querySelector('svg');
+             if (!svg) {
+                 label.textContent = 'No SVG';
+                 return;
+             }
+             
+             try {
+                 // Validate we have the required layout values
+                 if (typeof layout.nutY !== 'number' || typeof layout.svgHeight !== 'number') {
+                     label.textContent = 'Invalid layout data';
+                     return;
+                 }
+                 
+                 // Account for zoom and pan transformations
+                 // The SVG has a transform: translate(panX, panY) scale(zoomLevel)
+                 // The SVG is centered, so we need to reverse the transformation
+                 
+                 // Get the SVG's center point in the container
+                 const containerHeight = svgOutput.offsetHeight;
+                 const containerCenter = containerHeight / 2;
+                 
+                 // The ruler's position relative to center
+                 const rulerRelativeToCenter = pixelY - containerCenter;
+                 
+                 // Reverse the zoom and pan transformations
+                 // Undo pan: subtract panY
+                 // Undo zoom: divide by zoomLevel
+                 const adjustedY = (rulerRelativeToCenter - panY) / zoomLevel + containerCenter;
+                 
+                 // Map to SVG viewBox coordinates
+                 const ratioInContainer = adjustedY / containerHeight;
+                 const svgY = ratioInContainer * layout.svgHeight;
+                 
+                 // Check if Y is within the neck area
+                 if (svgY < layout.nutY || svgY > layout.heelEndY) {
+                     label.textContent = 'Outside neck area';
+                     label.style.background = '#6b7280';
+                     return;
+                 }
+                 
+                 // Calculate neck width at this Y position
+                 let neckWidth = layout.nutWidth;
+                 if (!layout.noTaper && typeof layout.taperRate === 'number') {
+                     const taperDistance = svgY - layout.nutY;
+                     neckWidth = layout.nutWidth + (layout.taperRate * taperDistance);
+                 }
+                 
+                 label.textContent = `${neckWidth.toFixed(2)}mm`;
+                 label.style.background = '#22c55e';
+             } catch (e) {
+                 console.error('Ruler error:', e);
+                 label.textContent = 'Error';
+             }
+            }
 
         // Handle scale length type changes
         document.getElementById('scale-length-type').addEventListener('change', function(e) {
@@ -1965,6 +2123,11 @@
             if (svg) {
                 svg.style.transform = `translate(calc(-50% + ${panX}px), calc(-50% + ${panY}px)) scale(${zoomLevel})`;
             }
+            // Update ruler measurement when transform changes
+            const ruler = document.getElementById('adjustable-ruler');
+            if (ruler) {
+                updateRulerLabel(ruler.offsetTop);
+            }
         }
 
         // Mouse wheel zoom
@@ -1981,6 +2144,8 @@
 
         // Mouse down to start panning
         svgOutput.addEventListener('mousedown', (e) => {
+            // Don't start SVG drag if we're dragging the ruler
+            if (isDraggingRuler) return;
             isDragging = true;
             dragStartX = e.clientX - panX;
             dragStartY = e.clientY - panY;
@@ -2064,6 +2229,24 @@
                 });
             }
         });
+
+        // Handle ruler toggle
+        const showRulerCheckbox = document.getElementById('show-ruler');
+        if (showRulerCheckbox) {
+            showRulerCheckbox.addEventListener('change', (e) => {
+                const rulerContainer = document.getElementById('ruler-container');
+                if (rulerContainer) {
+                    rulerContainer.style.display = e.target.checked ? 'block' : 'none';
+                    // Update ruler label when toggled on
+                    if (e.target.checked) {
+                        const ruler = document.getElementById('adjustable-ruler');
+                        if (ruler) {
+                            updateRulerLabel(ruler.offsetTop);
+                        }
+                    }
+                } 
+            });
+        }
     </script>
 </body>
 </html>
