@@ -623,8 +623,8 @@
                                 </div>
                                 <div>
                                     <label for="treble-e-margin" style="font-size: 0.85em; color: #666;">High String (mm)</label>
-                                    <input type="range" id="treble-e-margin" class="update-trigger" min="1" max="6" step="0.5" value="3">
-                                    <span id="treble-e-margin-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">3mm</span>
+                                    <input type="range" id="treble-e-margin" class="update-trigger" min="1" max="6" step="0.5" value="3.5">
+                                    <span id="treble-e-margin-value" style="display: block; margin-top: 6px; font-size: 0.95em; font-weight: 500; color: #1f2937;">3.5mm</span>
                                 </div>
                             </div>
                             <div class="info-text" style="margin-top: 8px;">Extra width beyond E strings</div>
@@ -908,6 +908,18 @@
                             </div>
                         </label>
                     </div>
+                    <div style="display: flex; align-items: center; cursor: pointer;">
+                        <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                            <span class="toggle-switch">
+                                <input type="checkbox" id="show-12th-fret-ruler" class="update-trigger">
+                                <span class="toggle-slider"></span>
+                            </span>
+                            <div style="margin-left: 8px;">
+                                <div style="font-size: 0.95em; font-weight: 500;">12th Fret Ruler</div>
+                                <div style="font-size: 0.85em; color: #888;">Width measurement</div>
+                            </div>
+                        </label>
+                    </div>
                 </div>
             </div>
             </div>
@@ -920,7 +932,7 @@
             'fender-strat': {
                 stringCount: 6,
                 scaleLength: 25.5,
-                nutWidth: 42,
+                nutWidth: 43,
                 bridgeSpacing: 52.5,
                 fretCount: 22,
                 nutExtension: 0,
@@ -929,7 +941,7 @@
             'fender-tele': {
                 stringCount: 6,
                 scaleLength: 25.5,
-                nutWidth: 42,
+                nutWidth: 43,
                 bridgeSpacing: 52.5,
                 fretCount: 22,
                 nutExtension: 0,
@@ -1129,7 +1141,7 @@
             const {
                 nutY, heelEndY, heelLeftEnd, heelRightEnd, heelRadiusComp, centerX,
                 fretPositions, outlineThickness, centerlineThickness, centerlineColor, fretCount,
-                nutLeft, nutRight, bridgeLeft, bridgeRight, bridgeY,
+                nutLeft, nutRight, nutWidth, taperRate,
                 pocketFret, pocketKerf, pocketThickness
             } = params;
 
@@ -1141,11 +1153,10 @@
             // Fret position
             const fretY = nutY + fretPositions[pocketFret - 1];
 
-            // Interpolate left/right at selected fret and heel
-            function interp(a, b, t) { return a + (b - a) * t; }
-            const tFret = (fretY - nutY) / (bridgeY - nutY);
-            const neckLeftFret = interp(nutLeft, bridgeLeft, tFret);
-            const neckRightFret = interp(nutRight, bridgeRight, tFret);
+            // Calculate neck width at fret position using taper rate
+            const neckWidthAtFret = nutWidth + (taperRate * (fretY - nutY));
+            const neckLeftFret = centerX - neckWidthAtFret / 2;
+            const neckRightFret = centerX + neckWidthAtFret / 2;
 
             // Kerf compensation for outline
             const heelLeftEndKerf = heelLeftEnd - pocketKerf;
@@ -1255,35 +1266,56 @@
             const bindingThickness = parseFloat(document.getElementById('binding-thickness').value);
             const bindingColor = document.getElementById('binding-color').value;
             const bindingOffset = parseFloat(document.getElementById('binding-offset').value);
+            const show12thFretRuler = document.getElementById('show-12th-fret-ruler').checked;
             
             // Move nutExtension up before it is used
             const nutExtension = parseFloat(document.getElementById('nut-extension').value);
-            // Calculate bridge width (E-to-E + margins)
-            const bridgeWidth = stringSpacing + bassEMargin + trebleEMargin;
             const padding = 50;
-            const svgWidth = Math.max(nutWidth, bridgeWidth) + (padding * 2);
-            const svgHeight = scaleLength + (padding * 2) + nutExtension;
-            const centerX = svgWidth / 2;
-            
             const noTaper = document.getElementById('no-taper')?.checked;
-            // Outline positions (with kerf compensation)
-            const nutWidthComp = nutWidth + kerfCompensation * 2;
-            const bridgeWidthComp = bridgeWidth + kerfCompensation * 2;
-            const nutLeft = centerX - nutWidthComp / 2;
-            const nutRight = centerX + nutWidthComp / 2;
-            let bridgeLeft, bridgeRight;
-            if (noTaper) {
-                bridgeLeft = nutLeft;
-                bridgeRight = nutRight;
-            } else {
-                bridgeLeft = centerX - bridgeWidthComp / 2;
-                bridgeRight = centerX + bridgeWidthComp / 2;
-            }
-
+            
+            // Helper to interpolate between nut and bridge (for outline and for strings)
+            function interp(a, b, t) { return a + (b - a) * t; }
+            
+            // Calculate neck length based on scale length and fret count
+            const fretPositions = calculateFretPositions(scaleLength, fretCount);
+            const lastFretPosition = fretPositions[fretPositions.length - 1];
+            
             // Apply kerf compensation to nut extension and heel
             const nutExtensionComp = nutExtension + kerfCompensation;
             const heelRadiusComp = Math.max(heelRadius - kerfCompensation, 0); // Prevent negative radius
             const heelDepthComp = 20 + kerfCompensation * 2; // Add kerf to both sides of heel depth
+            
+            // Setup coordinate system (before calculating taper rate)
+            const nutY = padding + nutExtensionComp;
+            const bridgeY = nutY + scaleLength;
+            
+            // Calculate consistent neck taper rate based on string fan-out geometry
+            // Strings spread linearly from nut to bridge, maintaining margins throughout
+            const nutEtoE = nutWidth - bassEMargin - trebleEMargin; // E-to-E at nut
+            const bridgeEtoE = stringSpacing; // E-to-E at bridge
+            
+            const fret12Y = nutY + fretPositions[11]; // 12th fret position
+            const distance12th = fret12Y - nutY;
+            
+            // Strings fan out linearly: at 12th fret, E-to-E is halfway between nut and bridge
+            const stringSpacingAt12th = nutEtoE + ((bridgeEtoE - nutEtoE) * 0.5);
+            // Neck width at 12th fret = string spacing at that point + margins
+            const neckWidthAt12th = stringSpacingAt12th + bassEMargin + trebleEMargin;
+            
+            const taperRate = noTaper ? 0 : (neckWidthAt12th - nutWidth) / distance12th;
+            
+            // Calculate bridge width based on taper rate
+            const bridgeWidth = nutWidth + (taperRate * scaleLength);
+            
+            // SVG dimensions
+            const svgWidth = Math.max(nutWidth, bridgeWidth) + (padding * 2);
+            const svgHeight = scaleLength + (padding * 2) + nutExtension;
+            const centerX = svgWidth / 2;
+            
+            // Outline positions (with kerf compensation)
+            const nutWidthComp = nutWidth + kerfCompensation * 2;
+            const nutLeft = centerX - nutWidthComp / 2;
+            const nutRight = centerX + nutWidthComp / 2;
             
             // String positions (NO kerf compensation)
             const nutLeftStr = centerX - nutWidth / 2;
@@ -1302,29 +1334,18 @@
             
             const nutStringX = Array.from({length: stringCount}, (_, i) => nutStringStart + i * nutStringSpacing);
             const bridgeStringX = Array.from({length: stringCount}, (_, i) => bridgeStringStart + i * bridgeStringSpacing);
-
-            // Helper to interpolate between nut and bridge (for outline and for strings)
-            function interp(a, b, t) { return a + (b - a) * t; }
-            
-            // Calculate neck length based on scale length and fret count
-            const fretPositions = calculateFretPositions(scaleLength, fretCount);
-            const lastFretPosition = fretPositions[fretPositions.length - 1];
-            
-            // Setup coordinate system
-            const nutY = padding + nutExtensionComp; // Use compensated nut extension
-            const bridgeY = nutY + scaleLength;
             
             // Calculate heel position with compensation
             const heelEndY = nutY + lastFretPosition + heelPosition;
             const heelStartY = heelEndY - heelDepthComp; // Use compensated heel depth
             
-            // Interpolate left/right at heelStartY and heelEndY (outline, with kerf)
-            const tHeelStart = (heelStartY - nutY) / (bridgeY - nutY);
-            const tHeelEnd = (heelEndY - nutY) / (bridgeY - nutY);
-            const heelLeftStart = interp(nutLeft, bridgeLeft, tHeelStart);
-            const heelRightStart = interp(nutRight, bridgeRight, tHeelStart);
-            const heelLeftEnd = interp(nutLeft, bridgeLeft, tHeelEnd);
-            const heelRightEnd = interp(nutRight, bridgeRight, tHeelEnd);
+            // Calculate neck width at heel positions using consistent taper rate
+            const neckWidthAtHeelStart = nutWidth + (taperRate * (heelStartY - nutY));
+            const neckWidthAtHeelEnd = nutWidth + (taperRate * (heelEndY - nutY));
+            const heelLeftStart = centerX - neckWidthAtHeelStart / 2;
+            const heelRightStart = centerX + neckWidthAtHeelStart / 2;
+            const heelLeftEnd = centerX - neckWidthAtHeelEnd / 2;
+            const heelRightEnd = centerX + neckWidthAtHeelEnd / 2;
             
             // Start building SVG
             let svgContent = `<svg width="${svgWidth}mm" height="${svgHeight}mm" viewBox="0 0 ${svgWidth} ${svgHeight}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
@@ -1378,9 +1399,9 @@
                         left = nutLeft;
                         right = nutRight;
                     } else {
-                        const t = (fretY - nutY) / (bridgeY - nutY);
-                        left = interp(nutLeft, bridgeLeft, t);
-                        right = interp(nutRight, bridgeRight, t);
+                        const neckWidthAtFret = nutWidth + (taperRate * (fretY - nutY));
+                        left = centerX - neckWidthAtFret / 2;
+                        right = centerX + neckWidthAtFret / 2;
                     }
                     svgContent += `
                     <line x1="${left}" y1="${fretY}" x2="${right}" y2="${fretY}" 
@@ -1456,13 +1477,14 @@
                 // Calculate the offset positions at nut and end points to maintain parallel lines
                 // Left binding line (parallel to left edge, inset by bindingOffset)
                 const bindingLeftNut = nutLeft + bindingOffset;
-                const bindingLeftEnd = interp(nutLeft, bridgeLeft, (bindingEndY - nutY) / (bridgeY - nutY)) + bindingOffset;
+                const neckWidthAtBindingEnd = nutWidth + (taperRate * (bindingEndY - nutY));
+                const bindingLeftEnd = centerX - neckWidthAtBindingEnd / 2 + bindingOffset;
                 svgContent += `
                 <line x1="${bindingLeftNut}" y1="${nutY}" x2="${bindingLeftEnd}" y2="${bindingEndY}" 
                       stroke="${bindingColor}" stroke-width="${bindingThickness}"/>`;
                 // Right binding line (parallel to right edge, inset by bindingOffset)
                 const bindingRightNut = nutRight - bindingOffset;
-                const bindingRightEnd = interp(nutRight, bridgeRight, (bindingEndY - nutY) / (bridgeY - nutY)) - bindingOffset;
+                const bindingRightEnd = centerX + neckWidthAtBindingEnd / 2 - bindingOffset;
                 svgContent += `
                 <line x1="${bindingRightNut}" y1="${nutY}" x2="${bindingRightEnd}" y2="${bindingEndY}" 
                       stroke="${bindingColor}" stroke-width="${bindingThickness}"/>`;
@@ -1529,6 +1551,33 @@
                 }
             }
             
+            // Add 12th fret width measurement (if enabled)
+            if (show12thFretRuler && fretPositions.length >= 12) {
+                const fret12Y = nutY + fretPositions[11]; // 12th fret is at index 11
+                let left12, right12;
+                if (noTaper) {
+                    left12 = nutLeft;
+                    right12 = nutRight;
+                } else {
+                    const neckWidthAt12 = nutWidth + (taperRate * (fret12Y - nutY));
+                    left12 = centerX - neckWidthAt12 / 2;
+                    right12 = centerX + neckWidthAt12 / 2;
+                }
+                const width12 = right12 - left12;
+                
+                // Draw measurement line on the 12th fret
+                svgContent += `
+                <svg width="0" height="0">
+                    <defs>
+                        <marker id="arrow-12fret" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L4,2 L0,4 L1.3,2 Z" fill="#FF6B6B" />
+                        </marker>
+                    </defs>
+                </svg>
+                <line x1="${left12}" y1="${fret12Y}" x2="${right12}" y2="${fret12Y}" stroke="#FF6B6B" stroke-width="1.5" marker-start="url(#arrow-12fret)" marker-end="url(#arrow-12fret)"/>
+                <text x="${centerX}" y="${fret12Y - 4}" font-family="Arial" font-size="10" font-weight="bold" text-anchor="middle" fill="#FF6B6B">${width12.toFixed(2)}mm</text>`;
+            }
+            
             // After main SVG generation
             const showNeckPocket = true;
             const neckPocketConfig = document.getElementById('neck-pocket-config');
@@ -1541,7 +1590,7 @@
                 const neckPocketSVG = generateNeckPocketSVG({
                     nutY, heelEndY, heelLeftEnd, heelRightEnd, heelRadiusComp, centerX,
                     fretPositions, outlineThickness, centerlineThickness, centerlineColor, fretCount,
-                    nutLeft, nutRight, bridgeLeft, bridgeRight, bridgeY,
+                    nutLeft, nutRight, nutWidth, taperRate,
                     pocketFret, pocketKerf, pocketThickness
                 });
                 document.getElementById('neck-pocket-output').innerHTML = neckPocketSVG;
