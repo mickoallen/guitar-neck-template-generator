@@ -681,8 +681,16 @@
                         <label for="neck-taper-type">Taper Profile:</label>
                         <select id="neck-taper-type" class="update-trigger">
                             <option value="parallel">Parallel with Strings</option>
-                            <option value="fender">Fender Standard</option>
-                            <option value="gibson">Gibson Standard</option>
+                            <optgroup label="Electric Guitars">
+                                <option value="fender">Fender Standard [52mm]</option>
+                                <option value="gibson">Gibson Standard [53mm]</option>
+                                <option value="prs">PRS Standard [53mm]</option>
+                                <option value="ibanez-rg">Ibanez RG [49mm]</option>
+                                <option value="ibanez-prestige">Ibanez Prestige [53mm]</option>
+                            </optgroup>
+                            <optgroup label="Acoustic">
+                                <option value="acoustic">Acoustic Standard [55mm]</option>
+                            </optgroup>
                             <option value="custom">Custom Width at 12th Fret</option>
                         </select>
                         <div class="info-text">Sets the neck width at the 12th fret position</div>
@@ -1371,11 +1379,17 @@
                  const stringSpacingAt12th = nutEtoE + ((bridgeEtoE - nutEtoE) * 0.5);
                  neckWidthAt12th = stringSpacingAt12th + bassEMargin + trebleEMargin;
              } else if (neckTaperType === 'fender') {
-                 // Fender standard: 50.5mm at 12th fret
-                 neckWidthAt12th = 50.5;
+                 neckWidthAt12th = 52;
              } else if (neckTaperType === 'gibson') {
-                 // Gibson standard: 50.8mm at 12th fret
-                 neckWidthAt12th = 50.8;
+                 neckWidthAt12th = 53;
+             } else if (neckTaperType === 'prs') {
+                 neckWidthAt12th = 53;
+             } else if (neckTaperType === 'ibanez-rg') {
+                 neckWidthAt12th = 49;
+             } else if (neckTaperType === 'ibanez-prestige') {
+                 neckWidthAt12th = 53;
+             } else if (neckTaperType === 'acoustic') {
+                 neckWidthAt12th = 55;
              } else if (neckTaperType === 'custom') {
                  // Custom: user-defined width at 12th fret
                  neckWidthAt12th = parseFloat(document.getElementById('taper-12th-width').value) || 50;
