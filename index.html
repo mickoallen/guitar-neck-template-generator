@@ -1202,13 +1202,9 @@
                     document.getElementById('neck-taper-type').value = config.taperType;
                 }
                 
-                // Trigger update after all values are set
-                document.getElementById('string-count').dispatchEvent(new Event('change'));
-                document.getElementById('fret-count').dispatchEvent(new Event('change'));
-                document.getElementById('scale-length-type').dispatchEvent(new Event('change'));
-                setTimeout(() => {
-                    applyingPreset = false;
-                }, 0);
+                // Generate template with all the preset values
+                generateTemplate();
+                applyingPreset = false;
             }
         });
 
