@@ -691,6 +691,11 @@
                             <optgroup label="Acoustic">
                                 <option value="acoustic">Acoustic Standard [55mm]</option>
                             </optgroup>
+                            <optgroup label="Bass Guitars">
+                                <option value="bass-4">4-String Bass [60mm]</option>
+                                <option value="bass-5">5-String Bass [70mm]</option>
+                                <option value="bass-6">6-String Bass [78mm]</option>
+                            </optgroup>
                             <option value="custom">Custom Width at 12th Fret</option>
                         </select>
                         <div class="info-text">Sets the neck width at the 12th fret position</div>
@@ -1401,43 +1406,48 @@
                  neckWidthAt12th = 53;
              } else if (neckTaperType === 'acoustic') {
                  neckWidthAt12th = 55;
+             } else if (neckTaperType === 'bass-4') {
+                 neckWidthAt12th = 60;
+             } else if (neckTaperType === 'bass-5') {
+                 neckWidthAt12th = 70;
+             } else if (neckTaperType === 'bass-6') {
+                 neckWidthAt12th = 78;
              } else if (neckTaperType === 'custom') {
                  // Custom: user-defined width at 12th fret
                  neckWidthAt12th = parseFloat(document.getElementById('taper-12th-width').value) || 50;
              }
              
              const taperRate = (neckWidthAt12th - nutWidth) / distance12th;
-            
-            // Calculate bridge width based on taper rate
-            const bridgeWidth = nutWidth + (taperRate * scaleLength);
-            
-            // SVG dimensions
-            const svgWidth = Math.max(nutWidth, bridgeWidth) + (padding * 2);
-            const svgHeight = scaleLength + (padding * 2) + nutExtension;
-            const centerX = svgWidth / 2;
-            
-            // Outline positions (with kerf compensation)
-            const nutWidthComp = nutWidth + kerfCompensation * 2;
-            const nutLeft = centerX - nutWidthComp / 2;
-            const nutRight = centerX + nutWidthComp / 2;
-            
-            // String positions (NO kerf compensation)
-            const nutLeftStr = centerX - nutWidth / 2;
-            const nutRightStr = centerX + nutWidth / 2;
-            const bridgeLeftStr = centerX - bridgeWidth / 2;
-            const bridgeRightStr = centerX + bridgeWidth / 2;
-
-            // Calculate string positions based on string count
-            const nutStringStart = nutLeftStr + bassEMargin;
-            const nutStringEnd = nutRightStr - trebleEMargin;
-            const bridgeStringStart = bridgeLeftStr + bassEMargin;
-            const bridgeStringEnd = bridgeRightStr - trebleEMargin;
-            
-            const nutStringSpacing = (nutStringEnd - nutStringStart) / (stringCount - 1);
-            const bridgeStringSpacing = (bridgeStringEnd - bridgeStringStart) / (stringCount - 1);
-            
-            const nutStringX = Array.from({length: stringCount}, (_, i) => nutStringStart + i * nutStringSpacing);
-            const bridgeStringX = Array.from({length: stringCount}, (_, i) => bridgeStringStart + i * bridgeStringSpacing);
+             
+             // Calculate bridge width based on taper rate (for neck outline only)
+             const bridgeWidth = nutWidth + (taperRate * scaleLength);
+             
+             // SVG dimensions - use the larger of nut or bridge width
+             const svgWidth = Math.max(nutWidth, bridgeWidth, stringSpacing) + (padding * 2);
+             const svgHeight = scaleLength + (padding * 2) + nutExtension;
+             const centerX = svgWidth / 2;
+             
+             // Outline positions (with kerf compensation)
+             const nutWidthComp = nutWidth + kerfCompensation * 2;
+             const nutLeft = centerX - nutWidthComp / 2;
+             const nutRight = centerX + nutWidthComp / 2;
+             
+             // String positions are FIXED at the nut and bridge, independent of neck taper
+             // Nut strings: spread across the nut width with bass and treble margins
+             const nutLeft_str = centerX - nutWidth / 2;
+             const nutRight_str = centerX + nutWidth / 2;
+             const nutStringStart = nutLeft_str + bassEMargin;
+             const nutStringEnd = nutRight_str - trebleEMargin;
+             const nutStringSpacing = (nutStringEnd - nutStringStart) / (stringCount - 1);
+             
+             // Bridge strings: fixed at the stringSpacing setting, centered
+             const bridgeStringStart = centerX - stringSpacing / 2;
+             const bridgeStringEnd = centerX + stringSpacing / 2;
+             const bridgeStringSpacing = stringSpacing / (stringCount - 1);
+             
+             // Generate string X positions
+             const nutStringX = Array.from({length: stringCount}, (_, i) => nutStringStart + i * nutStringSpacing);
+             const bridgeStringX = Array.from({length: stringCount}, (_, i) => bridgeStringStart + i * bridgeStringSpacing);
             
             // Calculate heel position with compensation
             const heelEndY = nutY + lastFretPosition + heelPosition;
